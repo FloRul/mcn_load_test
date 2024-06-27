@@ -26,8 +26,8 @@ if [ ! -f "$PROMPTS_FILE" ]; then
 fi
 
 # Run the load test
-echo "Running WebSocket load test..."
-python websocket_load_tester.py "$WEBSOCKET_URL" "$PROMPTS_FILE" --origin "$ORIGIN" --connections "$CONNECTIONS"
+echo "Running load test..."
+python load_tester.py "$WEBSOCKET_URL" "$PROMPTS_FILE" --origin "$ORIGIN" --connections "$CONNECTIONS"
 
 # Read the JSON summary
 if [ -f "load_test_summary.json" ]; then
