@@ -3,12 +3,15 @@
 # Exit immediately if a command exits with a non-zero status
 set -e
 
+# On peut passer un argument pour passer l'URL a tester
+DNS=${1:-dkmwo6pd6rra6.cloudfront.net}
+
 # Configuration
-WEBSOCKET_URL="wss://dkmwo6pd6rra6.cloudfront.net/socket"
-ORIGIN="https://dkmwo6pd6rra6.cloudfront.net"
+WEBSOCKET_URL="wss://${DNS}/socket"
+ORIGIN="https://${DNS}"
 SUMMARY_OUTPUT="load_test_summary.json"
 PROMPTS_FILE="prompts.txt"
-CONNECTIONS=20
+CONNECTIONS=10
 MAX_LATENCY=20  # Maximum acceptable average latency in seconds
 MIN_RPS=5      # Minimum acceptable requests per second
 MIN_SUCCESS_RATE=95  # Minimum acceptable success rate (percentage)
@@ -28,7 +31,7 @@ fi
 
 # Run the load test
 echo "Running load test..."
-python load_tester.py "$WEBSOCKET_URL" "$PROMPTS_FILE" --origin "$ORIGIN" --connections "$CONNECTIONS"
+python load_test.py "$WEBSOCKET_URL" "$PROMPTS_FILE" --origin "$ORIGIN" --connections "$CONNECTIONS"
 
 # Read the JSON summary
 if [ -f "load_test_summary.json" ]; then

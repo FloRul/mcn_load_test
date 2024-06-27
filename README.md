@@ -65,11 +65,14 @@ This project provides a set of tools to perform load testing on WebSocket endpoi
 
 3. Run the load test:
 
+   To overrode default DNS, pass it as argument.
+
     ```bash
-    ./run_load_test.sh
+    bash ./run_load_test.sh  discussion.test.robco.si.gouv.qc.ca
     ```
 
 4. Review the results:
+
    - The script will display a summary of the test results in the console.
    - A detailed JSON summary will be saved in `load_test_summary.json`.
 
