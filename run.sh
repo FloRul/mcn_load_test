@@ -6,6 +6,7 @@ set -e
 # Configuration
 WEBSOCKET_URL="wss://dkmwo6pd6rra6.cloudfront.net/socket"
 ORIGIN="https://dkmwo6pd6rra6.cloudfront.net"
+SUMMARY_OUTPUT="load_test_summary.json"
 PROMPTS_FILE="prompts.txt"
 CONNECTIONS=20
 MAX_LATENCY=20  # Maximum acceptable average latency in seconds
@@ -27,7 +28,7 @@ fi
 
 # Run the load test
 echo "Running WebSocket load test..."
-python websocket_load_tester.py "$WEBSOCKET_URL" "$PROMPTS_FILE" --origin "$ORIGIN" --connections "$CONNECTIONS"
+python load_test.py "$WEBSOCKET_URL" "$PROMPTS_FILE" "$SUMMARY_OUTPUT" --origin "$ORIGIN" --connections "$CONNECTIONS"
 
 # Read the JSON summary
 if [ -f "load_test_summary.json" ]; then

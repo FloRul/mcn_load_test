@@ -89,7 +89,7 @@ async def main():
     total_requests = len(results)
     total_time = end_time - start_time
     successful_requests = sum(
-        1 for _, response, _ in results if not response.startswith("Error")
+        1 for _, response, _ in results if not response.startswith("Une erreur")
     )
     latencies = [latency for _, _, latency in results if latency > 0]
     avg_latency = statistics.mean(latencies) if latencies else 0
