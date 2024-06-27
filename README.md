@@ -13,7 +13,7 @@ This project provides a set of tools to perform load testing on WebSocket endpoi
 
 ## Requirements
 
-- Python 3.7+
+- Python 3.11+
 - PowerShell (for Windows users)
 - `websockets` Python library
 
@@ -21,7 +21,7 @@ This project provides a set of tools to perform load testing on WebSocket endpoi
 
 1. Clone this repository:
    ```
-   git clone https://github.com/yourusername/websocket-load-tester.git
+   git clone https://github.com/FloRul/mcn_load_test.git
    cd websocket-load-tester
    ```
 
@@ -47,7 +47,7 @@ This project provides a set of tools to perform load testing on WebSocket endpoi
    ```
 
 2. Configure the test parameters:
-   Open `run_load_test.ps1` (or `run_load_test.sh` for bash) and modify the following variables as needed:
+   Open `run.sh` and modify the following variables as needed:
    ```powershell
    $WEBSOCKET_URL = "wss://your-api-gateway-url.execute-api.region.amazonaws.com/stage"
    $ORIGIN = "https://example.com"
@@ -59,14 +59,9 @@ This project provides a set of tools to perform load testing on WebSocket endpoi
    ```
 
 3. Run the load test:
-   - On Windows (PowerShell):
-     ```
-     .\run_load_test.ps1
-     ```
-   - On Unix-like systems (Bash):
-     ```
-     ./run_load_test.sh
-     ```
+    ```
+    ./run_load_test.sh
+    ```
 
 4. Review the results:
    - The script will display a summary of the test results in the console.
@@ -91,5 +86,5 @@ The test will fail if:
 
 To modify the test behavior or add new features:
 
-1. Edit `websocket_load_tester.py` to change the core load testing logic.
-2. Modify `run_load_test.ps1` (or `run_load_test.sh`) to adjust how the test is executed and how results are processed.
+1. Edit `load_test.py` to change the core load testing logic.
+2. Modify `run.sh` to adjust how the test is executed and how results are processed.
