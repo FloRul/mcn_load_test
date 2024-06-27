@@ -6,6 +6,7 @@ set -e
 # Configuration
 WEBSOCKET_URL="wss://dkmwo6pd6rra6.cloudfront.net/socket"
 ORIGIN="https://dkmwo6pd6rra6.cloudfront.net"
+SUMMARY_OUTPUT="load_test_summary.json"
 PROMPTS_FILE="prompts.txt"
 CONNECTIONS=20
 MAX_LATENCY=20  # Maximum acceptable average latency in seconds
