@@ -13,26 +13,29 @@ This project provides a set of tools to perform load testing on WebSocket endpoi
 
 ## Requirements
 
-- Python 3.11+
+- Python 3.9+
 - PowerShell (for Windows users)
 - `websockets` Python library
 
 ## Installation
 
 1. Clone this repository:
-   ```
+
+   ```bash
    git clone https://github.com/FloRul/mcn_load_test.git
    cd mcn-load-tester
    ```
 
 2. (Optional) Create a virtual environment:
-   ```
+
+   ```bash
    python -m venv venv
    source venv/bin/activate  # On Windows, use: .\venv\Scripts\Activate.ps1
    ```
 
 3. Install the required Python package:
-   ```
+
+   ```bash
    pip install websockets
    ```
 
@@ -40,7 +43,8 @@ This project provides a set of tools to perform load testing on WebSocket endpoi
 
 1. Prepare your test prompts:
    Create a file named `prompts.txt` with one prompt per line. For example:
-   ```
+
+   ```text
    Hello, how are you?
    What's the weather like today?
    Tell me a joke.
@@ -48,7 +52,8 @@ This project provides a set of tools to perform load testing on WebSocket endpoi
 
 2. Configure the test parameters:
    Open `run.sh` and modify the following variables as needed:
-   ```powershell
+
+   ```text
    $WEBSOCKET_URL = "wss://your-api-gateway-url.execute-api.region.amazonaws.com/stage"
    $ORIGIN = "https://example.com"
    $PROMPTS_FILE = "prompts.txt"
@@ -59,7 +64,8 @@ This project provides a set of tools to perform load testing on WebSocket endpoi
    ```
 
 3. Run the load test:
-    ```
+
+    ```bash
     ./run_load_test.sh
     ```
 
@@ -78,6 +84,7 @@ The load test provides the following metrics:
 - Latency statistics: Average, median, min, max, 95th percentile, and 99th percentile latencies
 
 The test will fail if:
+
 - The average latency exceeds `MAX_LATENCY`
 - The requests per second fall below `MIN_RPS`
 - The success rate (percentage of successful requests) is below `MIN_SUCCESS_RATE`
