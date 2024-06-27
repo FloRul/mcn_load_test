@@ -5,6 +5,8 @@ import time
 import argparse
 from urllib.parse import urlparse
 import statistics
+import os
+import datetime
 
 
 class WebSocketLoadTester:
@@ -52,7 +54,7 @@ class WebSocketLoadTester:
 
         tasks = [bounded_send(prompt) for prompt in prompts]
         results = await asyncio.gather(*tasks)
-        print()  # New line after progress indicator
+        print("\n")  # New line after progress indicator
         return results
 
 
@@ -107,26 +109,44 @@ async def main():
         else max_latency
     )
 
-    print(f"\nLoad Test Results:")
-    print(f"Total Requests: {total_requests}")
-    print(f"Successful Requests: {successful_requests}")
-    print(f"Total Time: {total_time:.2f} seconds")
-    print(f"Requests per second: {total_requests / total_time:.2f}")
-    print(f"Average Latency: {avg_latency:.4f} seconds")
-    print(f"Median Latency: {median_latency:.4f} seconds")
-    print(f"Min Latency: {min_latency:.4f} seconds")
-    print(f"Max Latency: {max_latency:.4f} seconds")
-    print(f"95th Percentile Latency: {p95_latency:.4f} seconds")
-    print(f"99th Percentile Latency: {p99_latency:.4f} seconds")
+    # Obtenir le nom du script sans l'extension
+    script_name = os.path.splitext(os.path.basename(__file__))[0]
 
-    print("\nSample Results:")
-    for i, (prompt, response, latency) in enumerate(results[:5]):
-        print(f"Request {i+1}:")
-        print(f"  Prompt: {prompt}")
-        print(f"  Response: {response}")
-        print(f"  Latency: {latency:.4f} seconds")
-        print()
+    # Obtenir la date et l'heure actuelles
+    current_time = datetime.datetime.now().strftime("%Y-%m-%d_%H-%M-%S")
 
+    # Créer le dossier des resultats si inexistant
+    output_dir = "results"
+    os.makedirs(output_dir, exist_ok=True)
+
+    # Construire le nom du fichier de sortie
+    output_filename = os.path.join(output_dir, f"{script_name}-{current_time}-output.log")
+    
+    with open(output_filename, 'w') as f:
+
+        f.write(f"\nLoad Test Results:\n")
+        f.write(f"Total Requests: {total_requests}\n")
+        f.write(f"Successful Requests: {successful_requests}\n")
+        f.write(f"Total Time: {total_time:.2f} seconds\n")
+        f.write(f"Requests per second: {total_requests / total_time:.2f}\n")
+        f.write(f"Average Latency: {avg_latency:.4f} seconds\n")
+        f.write(f"Median Latency: {median_latency:.4f} seconds\n")
+        f.write(f"Min Latency: {min_latency:.4f} seconds\n")
+        f.write(f"Max Latency: {max_latency:.4f} seconds\n")
+        f.write(f"95th Percentile Latency: {p95_latency:.4f} seconds\n")
+        f.write(f"99th Percentile Latency: {p99_latency:.4f} seconds\n")
+
+        f.write("\nSample Results:")
+        for i, (prompt, response, latency) in enumerate(results[:5]):
+            f.write(f"Request {i+1}:\n")
+            f.write(f"  Prompt: {prompt}\n")
+            response_json = json.loads(response)
+            message = response_json.get("message", "").lstrip("\n")
+            f.write(f"  Response: {message}\n")
+            f.write(f"  Latency: {latency:.4f} seconds\n")
+            f.write("\n\n")
+ 
+    print(f"\nResults written to {output_filename}\n")
     # Save summary results as JSON
     summary = {
         "total_requests": total_requests,
@@ -143,10 +163,11 @@ async def main():
         },
     }
 
-    with open("load_test_summary.json", "w") as f:
+    output_summary = os.path.join(output_dir, f"{script_name}-{current_time}-summary.json")
+    with open(output_summary, "w") as f:
         json.dump(summary, f, indent=2)
 
-    print("Summary results saved to load_test_summary.json")
+    print(f"Summary results saved to {output_summary}\n")
 
 
 if __name__ == "__main__":
