@@ -34,7 +34,6 @@ This project provides a set of tools to perform load testing on WebSocket endpoi
    ```
 
 3. Install the required Python package:
-
    ```bash
    pip install websockets
    ```
