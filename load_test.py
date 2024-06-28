@@ -76,7 +76,7 @@ async def main():
         parsed_url = urlparse(args.websocket_url)
         args.origin = f"{parsed_url.scheme}://{parsed_url.netloc}"
 
-    with open(args.prompts_file, "r") as f:
+    with open(args.prompts_file, "r", encoding="utf8") as f:
         prompts = [line.strip() for line in f if line.strip()]
 
     load_tester = WebSocketLoadTester(args.websocket_url, args.origin)
@@ -120,9 +120,11 @@ async def main():
     os.makedirs(output_dir, exist_ok=True)
 
     # Construire le nom du fichier de sortie
-    output_filename = os.path.join(output_dir, f"{script_name}-{current_time}-output.log")
-    
-    with open(output_filename, 'w') as f:
+    output_filename = os.path.join(
+        output_dir, f"{script_name}-{current_time}-output.log"
+    )
+
+    with open(output_filename, "w", encoding="utf8") as f:
 
         f.write(f"\nLoad Test Results:\n")
         f.write(f"Total Requests: {total_requests}\n")
@@ -137,7 +139,7 @@ async def main():
         f.write(f"99th Percentile Latency: {p99_latency:.4f} seconds\n")
 
         f.write("\nSample Results:")
-        for i, (prompt, response, latency) in enumerate(results[:5]):
+        for i, (prompt, response, latency) in enumerate(results):
             f.write(f"Request {i+1}:\n")
             f.write(f"  Prompt: {prompt}\n")
             response_json = json.loads(response)
@@ -145,7 +147,7 @@ async def main():
             f.write(f"  Response: {message}\n")
             f.write(f"  Latency: {latency:.4f} seconds\n")
             f.write("\n\n")
- 
+
     print(f"\nResults written to {output_filename}\n")
     # Save summary results as JSON
     summary = {
@@ -163,8 +165,10 @@ async def main():
         },
     }
 
-    output_summary = os.path.join(output_dir, f"{script_name}-{current_time}-summary.json")
-    with open(output_summary, "w") as f:
+    output_summary = os.path.join(
+        output_dir, f"{script_name}-{current_time}-summary.json"
+    )
+    with open(output_summary, "w", encoding="utf8") as f:
         json.dump(summary, f, indent=2)
 
     print(f"Summary results saved to {output_summary}\n")
