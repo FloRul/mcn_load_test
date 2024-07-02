@@ -1,15 +1,20 @@
 ﻿import asyncio
+from typing import List
 import websockets
 import json
 import time
 
+from metric import Metric
+
 
 class WebSocketLoadTester:
-    def __init__(self, websocket_url, origin):
+
+    def __init__(self, websocket_url, origin, metrics:List[Metric]):
         self.websocket_url = websocket_url
         self.origin = origin
         self.completed_requests = 0
         self.total_requests = 0
+        self.metrics = metrics
 
     async def send_message(self, prompt):
         try:
@@ -39,15 +44,19 @@ class WebSocketLoadTester:
             return prompt, f"Error: {str(e)}", 0
 
     async def run_load_test(self, prompts, connections):
-        self.total_requests = len(prompts)
-        self.completed_requests = 0
-        semaphore = asyncio.Semaphore(connections)
+      self.total_requests = len(prompts)
+      self.completed_requests = 0
+      semaphore = asyncio.Semaphore(connections)
 
-        async def bounded_send(prompt):
-            async with semaphore:
-                return await self.send_message(prompt)
+      async def bounded_send(prompt):
+          async with semaphore:
+              result = await self.send_message(prompt)
+              # Compute metrics for this result
+              for metric in self.metrics:
+                  metric.compute(prompt, result[1])  # result[1] is the response
+              return result
 
-        tasks = [bounded_send(prompt) for prompt in prompts]
-        results = await asyncio.gather(*tasks)
-        print("\n")  # New line after progress indicator
-        return results
+      tasks = [bounded_send(prompt) for prompt in prompts]
+      results = await asyncio.gather(*tasks)
+      print("\n")  # New line after progress indicator
+      return results
