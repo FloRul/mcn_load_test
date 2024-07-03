@@ -113,32 +113,47 @@ def write_summary(filename: str, stats: Dict[str, Any], total_time: float):
     }
     with open(filename, "w", encoding="utf8") as f:
         json.dump(summary, f, indent=2)
+import traceback
+import logging
+
+# Set up logging
+logging.basicConfig(
+    filename="load_test.log",
+    level=logging.ERROR,
+    format="%(asctime)s - %(levelname)s - %(message)s",
+)
 
 
 async def main():
-    args = parse_arguments()
-    prompts = load_prompts(args.prompts_file)
+    try:
+        args = parse_arguments()
+        prompts = load_prompts(args.prompts_file)
 
-    load_tester = WebSocketLoadTester(args.websocket_url, args.origin)
+        load_tester = WebSocketLoadTester(args.websocket_url, args.origin)
 
-    print(
-        f"Starting load test with {len(prompts)} prompts and up to {args.connections} concurrent connections"
-    )
-    start_time = time.time()
-    results = await load_tester.run_load_test(prompts, args.connections)
-    end_time = time.time()
+        print(
+            f"Starting load test with {len(prompts)} prompts and up to {args.connections} concurrent connections"
+        )
+        start_time = time.time()
+        results = await load_tester.run_load_test(prompts, args.connections)
+        end_time = time.time()
 
-    total_time = end_time - start_time
-    stats = calculate_statistics(results)
+        total_time = end_time - start_time
+        stats = calculate_statistics(results)
 
-    script_name = os.path.splitext(os.path.basename(__file__))[0]
-    output_filename, output_summary = generate_output_filenames(script_name)
+        script_name = os.path.splitext(os.path.basename(__file__))[0]
+        output_filename, output_summary = generate_output_filenames(script_name)
 
-    write_results(output_filename, stats, results, total_time)
-    write_summary(output_summary, stats, total_time)
+        write_results(output_filename, stats, results, total_time)
+        write_summary(output_summary, stats, total_time)
 
-    print(f"\nResults written to {output_filename}")
-    print(f"Summary results saved to {output_summary}\n")
+        print(f"\nResults written to {output_filename}")
+        print(f"Summary results saved to {output_summary}\n")
+    except Exception as e:
+        error_msg = f"An error occurred: {str(e)}\n{traceback.format_exc()}"
+        print(error_msg)
+        logging.error(error_msg)
+        raise  # Re-raise the exception after logging
 
 
 if __name__ == "__main__":

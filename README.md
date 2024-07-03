@@ -14,7 +14,7 @@ This project provides a set of tools to perform load testing on WebSocket endpoi
 ## Requirements
 
 - Python 3.9+
-- PowerShell (for Windows users)
+- PowerShell (for Windows users) or bash shell
 - `websockets` Python library
 
 ## Installation

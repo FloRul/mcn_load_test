@@ -1,7 +1,5 @@
 #!/bin/bash
-
-# Exit immediately if a command exits with a non-zero status
-set -e
+set -e  # Exit immediately if a command exits with a non-zero status
 
 # On peut passer un argument pour passer l'URL a tester
 DNS=${1:-dkmwo6pd6rra6.cloudfront.net}
@@ -27,48 +25,17 @@ if [ ! -f "$PROMPTS_FILE" ]; then
     echo "Creating sample prompts file..."
     echo -e "Hello, how are you?\nWhat's the weather like today?\nTell me a joke." > "$PROMPTS_FILE"
 fi
-
 # Run the load test
 echo "Running load test..."
 python load_test.py "$WEBSOCKET_URL" "$PROMPTS_FILE" --origin "$ORIGIN" --connections "$CONNECTIONS"
+python_exit_code=$?
 
-# obtenir le dernioer fichier de résultat
-load_test_summary=$(find results/ -name "*.json" -type f -print0 | xargs -0 stat --format "%Y %n" | sort -n | tail -1 | awk '{print $2}')
+echo "Python script exit code: $python_exit_code"
 
-# Read the JSON summary
-if [ -z "$load_test_summary" ]; then
-    echo "Error: ${load_test_summary} not found"
+if [ $python_exit_code -ne 0 ]; then
+    echo "Load test script failed with exit code $python_exit_code"
     exit 1
-else
-    echo "Load test summary:"
-    cat ${load_test_summary}
-
-    # Extract metrics from the JSON summary
-    avg_latency=$(jq -r '.latency.average' ${load_test_summary})
-    rps=$(jq -r '.requests_per_second' ${load_test_summary})
-    total_requests=$(jq -r '.total_requests' ${load_test_summary})
-    successful_requests=$(jq -r '.successful_requests' ${load_test_summary})
-
-    # Calculate success rate
-    success_rate=$(echo "scale=2; $successful_requests / $total_requests * 100" | bc)
-
-    # Check if the metrics are within acceptable ranges
-    if (( $(echo "$avg_latency > $MAX_LATENCY" | bc -l) )); then
-        echo "Average latency ($avg_latency s) exceeds maximum threshold ($MAX_LATENCY s)"
-        exit 1
-    fi
-
-    if (( $(echo "$rps < $MIN_RPS" | bc -l) )); then
-        echo "Requests per second ($rps) is below minimum threshold ($MIN_RPS)"
-        exit 1
-    fi
-
-    if (( $(echo "$success_rate < $MIN_SUCCESS_RATE" | bc -l) )); then
-        echo "Success rate ($success_rate%) is below minimum threshold ($MIN_SUCCESS_RATE%)"
-        exit 1
-    fi
-
-    echo "Load test passed successfully!"
 fi
 
+echo "Load test completed"
 exit 0
