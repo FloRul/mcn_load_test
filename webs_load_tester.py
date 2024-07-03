@@ -16,12 +16,12 @@ class WebSocketLoadTester:
         self.total_requests = 0
         self.metrics = metrics
 
-    async def send_message(self, prompt):
+    async def send_message(self, prompt: dict):
         try:
             async with websockets.connect(
                 self.websocket_url, origin=self.origin
             ) as websocket:
-                payload = json.dumps({"message": prompt})
+                payload = json.dumps({"message": prompt["Question"]})
                 start_time = time.time()
                 await websocket.send(payload)
                 response = await websocket.recv()
@@ -43,17 +43,19 @@ class WebSocketLoadTester:
             )
             return prompt, f"Error: {str(e)}", 0
 
-    async def run_load_test(self, prompts, connections):
+    async def run_load_test(self, prompts: List[dict], connections):
         self.total_requests = len(prompts)
         self.completed_requests = 0
         semaphore = asyncio.Semaphore(connections)
 
-        async def bounded_send(prompt):
+        async def bounded_send(prompt: dict):
             async with semaphore:
                 result = await self.send_message(prompt)
                 # Compute metrics for this result
                 for metric in self.metrics:
-                    metric.compute(prompt, result[1])  # result[1] is the response
+                    metric.compute(
+                        prompt, json.loads(result[1])
+                    )  # result[1] is the response
                 return result
 
         tasks = [bounded_send(prompt) for prompt in prompts]

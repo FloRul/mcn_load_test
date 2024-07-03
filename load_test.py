@@ -8,6 +8,7 @@ import os
 import datetime
 from typing import List, Tuple, Dict, Any
 
+from metric import Metric
 from webs_load_tester import WebSocketLoadTester
 
 
@@ -32,9 +33,13 @@ def parse_arguments() -> argparse.Namespace:
     return args
 
 
-def load_prompts(file_path: str) -> List[str]:
+def load_prompts(file_path: str) -> List[dict]:
+    prompts = []
     with open(file_path, "r", encoding="utf8") as f:
-        return [line.strip() for line in f if line.strip()]
+        for line in f:
+            data = json.loads(line)
+            prompts.append(data)
+    return prompts
 
 
 def calculate_statistics(results: List[Tuple[str, str, float]]) -> Dict[str, Any]:
@@ -103,16 +108,29 @@ def write_results(
             f.write("\n\n")
 
 
-def write_summary(filename: str, stats: Dict[str, Any], total_time: float):
+def write_summary(
+    filename: str, stats: Dict[str, Any], total_time: float, metrics: List[Metric]
+):
     summary = {
         "total_requests": stats["total_requests"],
         "successful_requests": stats["successful_requests"],
         "total_time": total_time,
         "requests_per_second": stats["total_requests"] / total_time,
         "latency": stats["latency"],
+        "metrics": {},
     }
+
+    for metric in metrics:
+        metric_name, metric_average, metric_scores = metric.get_results()
+        summary["metrics"][metric_name] = {
+            "average": metric_average,
+            "scores": metric_scores,
+        }
+
     with open(filename, "w", encoding="utf8") as f:
         json.dump(summary, f, indent=2)
+
+
 import traceback
 import logging
 
@@ -124,12 +142,24 @@ logging.basicConfig(
 )
 
 
+def get_metrics() -> List[Metric]:
+    def classification_accuracy(input: dict, output: dict) -> float:
+        try:
+            return 1.0 if input["Intent"] == output["intent"] else 0.0
+        except KeyError:
+            return 0.0
+
+    return [
+        Metric("classification_accuracy", classification_accuracy),
+    ]
+
+
 async def main():
     try:
         args = parse_arguments()
         prompts = load_prompts(args.prompts_file)
 
-        load_tester = WebSocketLoadTester(args.websocket_url, args.origin)
+        load_tester = WebSocketLoadTester(args.websocket_url, args.origin, get_metrics())
 
         print(
             f"Starting load test with {len(prompts)} prompts and up to {args.connections} concurrent connections"
@@ -145,7 +175,7 @@ async def main():
         output_filename, output_summary = generate_output_filenames(script_name)
 
         write_results(output_filename, stats, results, total_time)
-        write_summary(output_summary, stats, total_time)
+        write_summary(output_summary, stats, total_time, load_tester.metrics)
 
         print(f"\nResults written to {output_filename}")
         print(f"Summary results saved to {output_summary}\n")
