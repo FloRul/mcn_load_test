@@ -9,9 +9,6 @@ WEBSOCKET_URL="wss://${DNS}/socket"
 ORIGIN="https://${DNS}"
 PROMPTS_FOLDER="./datasets"
 CONNECTIONS=20
-MAX_LATENCY=20  # Maximum acceptable average latency in seconds
-MIN_RPS=5      # Minimum acceptable requests per second
-MIN_SUCCESS_RATE=95  # Minimum acceptable success rate (percentage)
 
 # Setup virtual environment
 python3 -m venv venv || { echo "Failed to create virtual environment"; exit 1; }
