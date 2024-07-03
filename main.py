@@ -111,7 +111,7 @@ def write_results(
         f.write("\nSample Results:")
         for i, (prompt, response, latency) in enumerate(results):
             f.write(f"Request {i+1}:\n")
-            f.write(f"  Prompt: {prompt["Question"]}\n")
+            f.write(f"  Prompt: {prompt['Question']}\n")
             response_json = json.loads(response)
             message = response_json.get("message", "").lstrip("\n")
             f.write(f"  Response: {message}\n")
