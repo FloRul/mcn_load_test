@@ -1,0 +1,88 @@
+2024-07-03 09:44:51,091 - ERROR - An error occurred: string indices must be integers, not 'str'
+Traceback (most recent call last):
+  File "/Users/florianrumiel/Documents/GitHub/mcn_load_test/load_test.py", line 153, in main
+    results = await load_tester.run_load_test(prompts, args.connections)
+              ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/Users/florianrumiel/Documents/GitHub/mcn_load_test/webs_load_tester.py", line 60, in run_load_test
+    results = await asyncio.gather(*tasks)
+              ^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/Users/florianrumiel/Documents/GitHub/mcn_load_test/webs_load_tester.py", line 56, in bounded_send
+    metric.compute(prompt, result[1])  # result[1] is the response
+    ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/Users/florianrumiel/Documents/GitHub/mcn_load_test/metric.py", line 13, in compute
+    score: float = self.function(prompt, response)
+                   ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/Users/florianrumiel/Documents/GitHub/mcn_load_test/load_test.py", line 133, in classification_accuracy
+    return 1.0 if input["intent"] == output["intent"] else 0.0
+                  ~~~~~^^^^^^^^^^
+TypeError: string indices must be integers, not 'str'
+
+2024-07-03 10:14:13,329 - ERROR - An error occurred: string indices must be integers, not 'str'
+Traceback (most recent call last):
+  File "/Users/florianrumiel/Documents/GitHub/mcn_load_test/load_test.py", line 153, in main
+    results = await load_tester.run_load_test(prompts, args.connections)
+              ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/Users/florianrumiel/Documents/GitHub/mcn_load_test/webs_load_tester.py", line 60, in run_load_test
+    results = await asyncio.gather(*tasks)
+              ^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/Users/florianrumiel/Documents/GitHub/mcn_load_test/webs_load_tester.py", line 56, in bounded_send
+    metric.compute(prompt, result[1])  # result[1] is the response
+    ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/Users/florianrumiel/Documents/GitHub/mcn_load_test/metric.py", line 13, in compute
+    score: float = self.function(prompt, response)
+                   ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/Users/florianrumiel/Documents/GitHub/mcn_load_test/load_test.py", line 133, in classification_accuracy
+    return 1.0 if input["Intent"] == output["intent"] else 0.0
+                  ~~~~~^^^^^^^^^^
+TypeError: string indices must be integers, not 'str'
+
+2024-07-03 10:16:02,395 - ERROR - An error occurred: string indices must be integers, not 'str'
+Traceback (most recent call last):
+  File "/Users/florianrumiel/Documents/GitHub/mcn_load_test/load_test.py", line 153, in main
+    results = await load_tester.run_load_test(prompts, args.connections)
+              ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/Users/florianrumiel/Documents/GitHub/mcn_load_test/webs_load_tester.py", line 60, in run_load_test
+    results = await asyncio.gather(*tasks)
+              ^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/Users/florianrumiel/Documents/GitHub/mcn_load_test/webs_load_tester.py", line 56, in bounded_send
+    metric.compute(prompt, result[1])  # result[1] is the response
+    ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/Users/florianrumiel/Documents/GitHub/mcn_load_test/metric.py", line 13, in compute
+    score: float = self.function(prompt, response)
+                   ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/Users/florianrumiel/Documents/GitHub/mcn_load_test/load_test.py", line 133, in classification_accuracy
+    return 1.0 if input["Intent"] == output["intent"] else 0.0
+                  ~~~~~^^^^^^^^^^
+TypeError: string indices must be integers, not 'str'
+
+2024-07-03 10:22:09,352 - ERROR - An error occurred: string indices must be integers, not 'str'
+Traceback (most recent call last):
+  File "/Users/florianrumiel/Documents/GitHub/mcn_load_test/load_test.py", line 157, in main
+    results = await load_tester.run_load_test(prompts, args.connections)
+              ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/Users/florianrumiel/Documents/GitHub/mcn_load_test/webs_load_tester.py", line 60, in run_load_test
+    results = await asyncio.gather(*tasks)
+              ^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/Users/florianrumiel/Documents/GitHub/mcn_load_test/webs_load_tester.py", line 56, in bounded_send
+    metric.compute(prompt, result[1])  # result[1] is the response
+    ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/Users/florianrumiel/Documents/GitHub/mcn_load_test/metric.py", line 13, in compute
+    score: float = self.function(prompt, response)
+                   ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/Users/florianrumiel/Documents/GitHub/mcn_load_test/load_test.py", line 137, in classification_accuracy
+    return 1.0 if input["Intent"] == output["intent"] else 0.0
+                                     ~~~~~~^^^^^^^^^^
+TypeError: string indices must be integers, not 'str'
+
+2024-07-03 11:12:34,925 - ERROR - An error occurred: Unexpected UTF-8 BOM (decode using utf-8-sig): line 1 column 1 (char 0)
+Traceback (most recent call last):
+  File "/Users/florianrumiel/Documents/GitHub/mcn_load_test/load_test.py", line 159, in main
+    prompts = load_prompts(args.prompts_file)
+              ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/Users/florianrumiel/Documents/GitHub/mcn_load_test/load_test.py", line 40, in load_prompts
+    data = json.loads(line)
+           ^^^^^^^^^^^^^^^^
+  File "/opt/homebrew/Cellar/python@3.12/3.12.3/Frameworks/Python.framework/Versions/3.12/lib/python3.12/json/__init__.py", line 335, in loads
+    raise JSONDecodeError("Unexpected UTF-8 BOM (decode using utf-8-sig)",
+json.decoder.JSONDecodeError: Unexpected UTF-8 BOM (decode using utf-8-sig): line 1 column 1 (char 0)
+

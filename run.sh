@@ -7,7 +7,7 @@ DNS=${1:-dkmwo6pd6rra6.cloudfront.net}
 # Configuration
 WEBSOCKET_URL="wss://${DNS}/socket"
 ORIGIN="https://${DNS}"
-PROMPTS_FILE="prompts.txt"
+PROMPTS_FILE="./datasets/contact.jsonl"
 CONNECTIONS=20
 MAX_LATENCY=20  # Maximum acceptable average latency in seconds
 MIN_RPS=5      # Minimum acceptable requests per second
