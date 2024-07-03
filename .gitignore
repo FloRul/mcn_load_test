@@ -5,4 +5,3 @@ results
 __pycache__/
 dataset_reader/__pycache__/
 load_test.log
-dataset_reader/Prompt.py
