@@ -8,16 +8,14 @@ import os
 import datetime
 from typing import List, Tuple, Dict, Any
 
-from metric import Metric
-from webs_load_tester import WebSocketLoadTester
-
+from core import Metric, WebSocketLoadTester
 
 def parse_arguments() -> argparse.Namespace:
     parser = argparse.ArgumentParser(
         description="WebSocket Load Tester for AWS API Gateway"
     )
     parser.add_argument("websocket_url", help="WebSocket URL of the AWS API Gateway")
-    parser.add_argument("prompts_file", help="File containing prompts, one per line")
+    parser.add_argument("prompts_folder", help="Folder containing JSON files with prompts")
     parser.add_argument(
         "--origin", help="Origin for the WebSocket connection", default=None
     )
@@ -32,6 +30,19 @@ def parse_arguments() -> argparse.Namespace:
 
     return args
 
+def read_prompts(folder_path: str) -> list[dict]:
+    prompts = []
+    for filename in os.listdir(folder_path):
+        if filename.endswith('.jsonl'):
+            file_path = os.path.join(folder_path, filename)
+            with open(file_path, 'r', encoding='utf8') as file:
+                for line in file:
+                    try:
+                        prompt = json.loads(line)
+                        prompts.append(prompt)
+                    except (json.JSONDecodeError, KeyError):
+                        print(f"Warning: Skipping invalid line in {filename}")
+    return prompts
 
 def load_prompts(file_path: str) -> List[dict]:
     prompts = []
@@ -152,11 +163,10 @@ def get_metrics() -> List[Metric]:
         Metric("classification_accuracy", classification_accuracy),
     ]
 
-
 async def main():
     try:
         args = parse_arguments()
-        prompts = load_prompts(args.prompts_file)
+        prompts = read_prompts(args.prompts_folder)
 
         load_tester = WebSocketLoadTester(args.websocket_url, args.origin, get_metrics())
 
@@ -183,7 +193,6 @@ async def main():
         print(error_msg)
         logging.error(error_msg)
         raise  # Re-raise the exception after logging
-
 
 if __name__ == "__main__":
     asyncio.run(main())

@@ -32,22 +32,10 @@ This project provides a set of tools to perform load testing on WebSocket endpoi
    python -m venv venv
    source venv/bin/activate  # On Windows, use: .\venv\Scripts\Activate.ps1
    ```
-
-3. Install the required Python package:
-   ```bash
-   pip install websockets
-   ```
-
 ## Usage
 
 1. Prepare your test prompts:
-   Create a file named `prompts.txt` with one prompt per line. For example:
-
-   ```text
-   Hello, how are you?
-   What's the weather like today?
-   Tell me a joke.
-   ```
+   Add into ./datasets a jsonl file with the following format : {"Intent":"dqgeneral","Question":"Je cherche des donnees..."}
 
 2. Configure the test parameters:
    Open `run.sh` and modify the following variables as needed:
@@ -55,16 +43,12 @@ This project provides a set of tools to perform load testing on WebSocket endpoi
    ```text
    $WEBSOCKET_URL = "wss://your-api-gateway-url.execute-api.region.amazonaws.com/stage"
    $ORIGIN = "https://example.com"
-   $PROMPTS_FILE = "prompts.txt"
+   $PROMPTS_FOLDER = "./datasets"
    $CONNECTIONS = 20
-   $MAX_LATENCY = 0.5
-   $MIN_RPS = 100
-   $MIN_SUCCESS_RATE = 95
    ```
 
 3. Run the load test:
-
-   To overrode default DNS, pass it as argument.
+   To override default DNS, pass it as argument.
 
     ```bash
     bash ./run_load_test.sh  discussion.test.robco.si.gouv.qc.ca
@@ -85,15 +69,9 @@ The load test provides the following metrics:
 - Requests per second: The average number of requests processed per second
 - Latency statistics: Average, median, min, max, 95th percentile, and 99th percentile latencies
 
-The test will fail if:
-
-- The average latency exceeds `MAX_LATENCY`
-- The requests per second fall below `MIN_RPS`
-- The success rate (percentage of successful requests) is below `MIN_SUCCESS_RATE`
-
 ## Customizing the Test
 
 To modify the test behavior or add new features:
 
-1. Edit `load_test.py` to change the core load testing logic.
+1. Edit `main.py` to change the core load testing logic.
 2. Modify `run.sh` to adjust how the test is executed and how results are processed.
