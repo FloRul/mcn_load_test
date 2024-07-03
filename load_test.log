@@ -74,3 +74,15 @@ Traceback (most recent call last):
                                      ~~~~~~^^^^^^^^^^
 TypeError: string indices must be integers, not 'str'
 
+2024-07-03 11:12:34,925 - ERROR - An error occurred: Unexpected UTF-8 BOM (decode using utf-8-sig): line 1 column 1 (char 0)
+Traceback (most recent call last):
+  File "/Users/florianrumiel/Documents/GitHub/mcn_load_test/load_test.py", line 159, in main
+    prompts = load_prompts(args.prompts_file)
+              ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/Users/florianrumiel/Documents/GitHub/mcn_load_test/load_test.py", line 40, in load_prompts
+    data = json.loads(line)
+           ^^^^^^^^^^^^^^^^
+  File "/opt/homebrew/Cellar/python@3.12/3.12.3/Frameworks/Python.framework/Versions/3.12/lib/python3.12/json/__init__.py", line 335, in loads
+    raise JSONDecodeError("Unexpected UTF-8 BOM (decode using utf-8-sig)",
+json.decoder.JSONDecodeError: Unexpected UTF-8 BOM (decode using utf-8-sig): line 1 column 1 (char 0)
+

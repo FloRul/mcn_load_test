@@ -100,7 +100,7 @@ def write_results(
         f.write("\nSample Results:")
         for i, (prompt, response, latency) in enumerate(results):
             f.write(f"Request {i+1}:\n")
-            f.write(f"  Prompt: {prompt}\n")
+            f.write(f"  Prompt: {prompt["Question"]}\n")
             response_json = json.loads(response)
             message = response_json.get("message", "").lstrip("\n")
             f.write(f"  Response: {message}\n")
@@ -124,7 +124,6 @@ def write_summary(
         metric_name, metric_average, metric_scores = metric.get_results()
         summary["metrics"][metric_name] = {
             "average": metric_average,
-            "scores": metric_scores,
         }
 
     with open(filename, "w", encoding="utf8") as f:

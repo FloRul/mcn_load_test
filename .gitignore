@@ -2,3 +2,4 @@ venv
 conda.info
 load_test_summary.json
 results
+load_test.log
