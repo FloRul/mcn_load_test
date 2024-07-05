@@ -173,13 +173,18 @@ def get_metrics() -> List[Metric]:
             return 1.0 if input["Intent"] == output["intent"] else 0.0
         except KeyError:
             return 0.0
-    
+
     def ref_recall_count(input: dict, output: dict) -> float:
         try:
-            if (input["RefCount"]==0 or input["RefCount"]==1) and input["RefCount"] < len(output["references"]):
+            out_ref_count = len(output["references"])
+            in_ref_count = len(input["RefCount"])
+
+            if (
+                in_ref_count == 0 or in_ref_count == 1
+            ) and in_ref_count < out_ref_count:
                 return 1.0
             else:
-                if input["RefCount"] <= len(output["references"]):
+                if in_ref_count <= out_ref_count:
                     return 1.0
                 else:
                     return 0.0
@@ -187,8 +192,16 @@ def get_metrics() -> List[Metric]:
             return 0.0
 
     return [
-        Metric("classification_accuracy", classification_accuracy, failure_condition=lambda _, __, score: score == 0.0),
-        Metric("ref_recall_count", ref_recall_count, failure_condition=lambda _, __, score: score == 0.0),
+        Metric(
+            "classification_accuracy",
+            classification_accuracy,
+            failure_condition=lambda _, __, score: score == 0.0,
+        ),
+        Metric(
+            "ref_recall_count",
+            ref_recall_count,
+            failure_condition=lambda _, __, score: score == 0.0,
+        ),
     ]
 
 
