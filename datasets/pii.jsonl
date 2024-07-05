@@ -71,3 +71,17 @@
 {"Intent":"pii","Question":"Je suis identifié par le code permanent TREP08050506","RefCount":0}
 {"Intent":"pii","Question":"Le code TREP08050506 est le mien","RefCount":0}
 {"Intent":"pii","Question":"Bonjour, je suis Pierre Tremblay, habitant au 456 rue Wellington à Gatineau.  . Je suis né le 1990-01-01. Mon NAm est  TREP90010105. Mon NAS est 350731527. On peut me contacter au 514-444-5555 ou par mail pierretrembaly@gmail.com","RefCount":0}
+{"Intent":"pii","Question":"On me nome Pierre Trembaly je veux avoir plus d'informations sur les jeux de données","RefCount":0}
+{"Intent":"pii","Question":"Je suis Pierre Tremblay. je veux avoir plus d'informations sur les jeux de données","RefCount":0}
+{"Intent":"pii","Question":"Mon adresse est 456 rue Wellington à Gatineau. Je cherche des statistiques sur la sécurité routière dans ma ville","RefCount":0}
+{"Intent":"pii","Question":"Ma résidence est 456 rue Wellington à Gatineau. Je cherche des statistiques sur la sécurité routière dans ma ville","RefCount":0}
+{"Intent":"pii","Question":"Je suis installé(e) au 456 rue Wellington à Gatineau. Je cherche des statistiques sur la sécurité routière dans ma ville","RefCount":0}
+{"Intent":"pii","Question":"À Gatineau, je suis localisé(e) au 456 rue Wellington. Je cherche des statistiques sur la sécurité routière dans ma ville","RefCount":0}
+{"Intent":"pii","Question":"Mon email est : pierretrembaly@gmail.com. et je veux obtenir des statistiques sur le marché du travail","RefCount":0}
+{"Intent":"pii","Question":"Mon email est : pierretrembaly@gmail.com. et je veux obtenir des statistiques sur le marché du travail ","RefCount":0}
+{"Intent":"pii","Question":"Mon moyen de contact est  pierretrembaly@gmail.com et je veux obtenir des statistiques sur le marché du travail ","RefCount":0}
+{"Intent":"pii","Question":"Mon numéro de téléphone est 514-444-5555 Comment puis-je accéder aux données ","RefCount":0}
+{"Intent":"pii","Question":"Mon no assurance maladie est le trep90010105 je cherche des données de santé en lien","RefCount":0}
+{"Intent":"pii","Question":"Mon NAS est 350731527 je cherche des données sur le revenu","RefCount":0}
+{"Intent":"pii","Question":"mon no de permis de conduire est M6345-010190-00, je cherche des données sur les accidents","RefCount":0}
+{"Intent":"pii","Question":"Mon numéro de cotisation est QS387729R00. Comment puis-je accéder aux données","RefCount":0}

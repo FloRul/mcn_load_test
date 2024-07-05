@@ -1,20 +1,21 @@
-{"Intent":"dqgeneral","Question":"Donne moi l'auteur du jeu de données Débits par capita"}
-{"Intent":"dqgeneral","Question":"Donne moi l'auteur du jeu de données DOimmo"}
-{"Intent":"dqgeneral","Question":"Donne moi l'auteur du jeu de données Orthophotographies aériennes de la région des Laurentides"}
-{"Intent":"dqgeneral","Question":"Donne moi l'auteur du jeu de données Résultats du dépistage des entrées de service en plomb réalisé par un Palintest"}
-{"Intent":"dqgeneral","Question":"Donne moi l'auteur du jeu de données Solidarité sociale (SS) : adultes prestataires"}
-{"Intent":"dqgeneral","Question":"Donne moi l'auteur du jeu de données Milieux humides à protéger ou à restaurer (sous contrôle intérimaire)"}
-{"Intent":"dqgeneral","Question":"Donne moi l'auteur du jeu de données Limite des secteurs de poste de quartier de police"}
-{"Intent":"dqgeneral","Question":"Donne moi l'auteur du jeu de données Qualité physico-chimique de l'eau de surface du fleuve, travaux intercepteur sud-est, Nov. 2015"}
-{"Intent":"dqgeneral","Question":"Donne moi l'auteur du jeu de données Délimitation des zones d’aménagement écologique particulière"}
-{"Intent":"dqgeneral","Question":"Donne moi l'auteur du jeu de données Bornes d'incendie"}
-{"Intent":"dqgeneral","Question":"Donne moi l'auteur du jeu de données Actes criminels"}
-{"Intent":"dqgeneral","Question":"Donne moi l'auteur du jeu de données Données sur les perturbations naturelles - Insecte : Arpenteuse de la pruche"}
-{"Intent":"dqgeneral","Question":"Donne moi l'auteur du jeu de données Base de données sur la connectivité écologique des milieux naturels dans les basses-terres du Saint-Laurent"}
-{"Intent":"dqgeneral","Question":"Donne moi l'auteur du jeu de données Montant des amendes payées et impayées par bibliothèque"}
-{"Intent":"dqgeneral","Question":"Donne moi l'auteur du jeu de données Orthophotographies 2021 de Rouyn-Noranda"}
-{"Intent":"dqgeneral","Question":"Donne moi l'auteur du jeu de données Localisation des tronçons de calcul des contraintes sonores"}
-{"Intent":"dqgeneral","Question":"Donne moi l'auteur du jeu de données Emplois industrie bioalimentaire"}
-{"Intent":"dqgeneral","Question":"Donne moi l'auteur du jeu de données Voirie"}
-{"Intent":"dqgeneral","Question":"Donne moi l'auteur du jeu de données Inventaire des arbres répertoriés"}
-{"Intent":"dqgeneral","Question":"Donne moi l'auteur du jeu de données Zones de gestion intégrée de l'eau par bassin versant"}
+{"Intent":"dqgeneral","Question":"Donne moi l'auteur du jeu de données Débits par capita", "RefCount":1}
+{"Intent":"dqgeneral","Question":"Donne moi l'auteur du jeu de données DOimmo", "RefCount":1}
+{"Intent":"dqgeneral","Question":"Donne moi l'auteur du jeu de données Orthophotographies aériennes de la région des Laurentides", "RefCount":1}
+{"Intent":"dqgeneral","Question":"Donne moi l'auteur du jeu de données Résultats du dépistage des entrées de service en plomb réalisé par un Palintest", "RefCount":1}
+{"Intent":"dqgeneral","Question":"Donne moi l'auteur du jeu de données Solidarité sociale (SS) : adultes prestataires", "RefCount":1}
+{"Intent":"dqgeneral","Question":"Donne moi l'auteur du jeu de données Milieux humides à protéger ou à restaurer (sous contrôle intérimaire)", "RefCount":1}
+{"Intent":"dqgeneral","Question":"Donne moi l'auteur du jeu de données Limite des secteurs de poste de quartier de police", "RefCount":1}
+{"Intent":"dqgeneral","Question":"Donne moi l'auteur du jeu de données Qualité physico-chimique de l'eau de surface du fleuve, travaux intercepteur sud-est, Nov. 2015", "RefCount":1}
+{"Intent":"dqgeneral","Question":"Donne moi l'auteur du jeu de données Délimitation des zones d’aménagement écologique particulière", "RefCount":1}
+{"Intent":"dqgeneral","Question":"Donne moi l'auteur du jeu de données Bornes d'incendie", "RefCount":1}
+{"Intent":"dqgeneral","Question":"Donne moi l'auteur du jeu de données Actes criminels", "RefCount":1}
+{"Intent":"dqgeneral","Question":"Donne moi l'auteur du jeu de données Données sur les perturbations naturelles - Insecte : Arpenteuse de la pruche", "RefCount":1}
+{"Intent":"dqgeneral","Question":"Donne moi l'auteur du jeu de données Base de données sur la connectivité écologique des milieux naturels dans les basses-terres du Saint-Laurent", "RefCount":1}
+{"Intent":"dqgeneral","Question":"Donne moi l'auteur du jeu de données Montant des amendes payées et impayées par bibliothèque", "RefCount":1}
+{"Intent":"dqgeneral","Question":"Donne moi l'auteur du jeu de données Orthophotographies 2021 de Rouyn-Noranda", "RefCount":1}
+{"Intent":"dqgeneral","Question":"Donne moi l'auteur du jeu de données Localisation des tronçons de calcul des contraintes sonores", "RefCount":1}
+{"Intent":"dqgeneral","Question":"Donne moi l'auteur du jeu de données Emplois industrie bioalimentaire", "RefCount":1}
+{"Intent":"dqgeneral","Question":"Donne moi l'auteur du jeu de données Voirie", "RefCount":1}
+{"Intent":"dqgeneral","Question":"Donne moi l'auteur du jeu de données Inventaire des arbres répertoriés", "RefCount":1}
+{"Intent":"dqgeneral","Question":"Donne moi l'auteur du jeu de données Zones de gestion intégrée de l'eau par bassin versant", "RefCount":1}
+{"Intent":"dqgeneral","Question":"qui est l'auteur des jeux de données des pistes cyclables ?", "RefCount":1}
