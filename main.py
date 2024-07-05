@@ -1,4 +1,5 @@
 ﻿import asyncio
+import hashlib
 import json
 import time
 import argparse
@@ -89,39 +90,34 @@ def generate_output_filenames(script_name: str) -> Tuple[str, str]:
     output_dir = "results"
     os.makedirs(output_dir, exist_ok=True)
     return (
-        os.path.join(output_dir, f"{script_name}-{current_time}-output.log"),
+        os.path.join(output_dir, f"{script_name}-{current_time}-output.json"),
         os.path.join(output_dir, f"{script_name}-{current_time}-summary.json"),
     )
 
 
 def write_results(
     filename: str,
-    stats: Dict[str, Any],
     results: List[Tuple[str, str, float]],
-    total_time: float,
 ):
-    with open(filename, "w", encoding="utf8") as f:
-        f.write(f"\nLoad Test Results:\n")
-        f.write(f"Total Requests: {stats['total_requests']}\n")
-        f.write(f"Successful Requests: {stats['successful_requests']}\n")
-        f.write(f"Total Time: {total_time:.2f} seconds\n")
-        f.write(f"Requests per second: {stats['total_requests'] / total_time:.2f}\n")
-        f.write(f"Average Latency: {stats['latency']['average']:.4f} seconds\n")
-        f.write(f"Median Latency: {stats['latency']['median']:.4f} seconds\n")
-        f.write(f"Min Latency: {stats['latency']['min']:.4f} seconds\n")
-        f.write(f"Max Latency: {stats['latency']['max']:.4f} seconds\n")
-        f.write(f"95th Percentile Latency: {stats['latency']['p95']:.4f} seconds\n")
-        f.write(f"99th Percentile Latency: {stats['latency']['p99']:.4f} seconds\n")
+    output = {}
 
-        f.write("\nSample Results:")
-        for i, (prompt, response, latency) in enumerate(results):
-            f.write(f"Request {i+1}:\n")
-            f.write(f"  Prompt: {prompt['Question']}\n")
-            response_json = json.loads(response)
-            message = response_json.get("message", "").lstrip("\n")
-            f.write(f"  Response: {message}\n")
-            f.write(f"  Latency: {latency:.4f} seconds\n")
-            f.write("\n\n")
+    for prompt, response, latency in results:
+        # Create a hash of the request
+        request_hash = hashlib.md5(json.dumps(prompt).encode()).hexdigest()
+
+        # Parse the response JSON
+        response_json = json.loads(response)
+        message = response_json.get("message", "").lstrip("\n")
+
+        # Create the dictionary for this request
+        result_dict = {"input": prompt, "output": message, "latency": latency}
+
+        # Use the hash as the key in the output dictionary
+        output[request_hash] = result_dict
+
+    # Write the results to a JSON file
+    with open(filename, "w", encoding="utf8") as f:
+        json.dump(output, f, indent=2, ensure_ascii=False)
 
 
 def write_summary(
@@ -179,15 +175,14 @@ def get_metrics() -> List[Metric]:
             out_ref_count = len(output["references"])
             in_ref_count = int(input["RefCount"])
 
-            if (
-                in_ref_count == 0 or in_ref_count == 1
-            ) and in_ref_count < out_ref_count:
+            if in_ref_count == 0 and out_ref_count == 0:
+                return 1.0
+            elif in_ref_count == 1 and out_ref_count == 1:
+                return 1.0
+            elif in_ref_count > 1 and out_ref_count >= 1:
                 return 1.0
             else:
-                if out_ref_count >= 1:
-                    return 1.0
-                else:
-                    return 0.0
+                return 0.0
         except KeyError:
             return 0.0
 
@@ -227,7 +222,7 @@ async def main():
         script_name = os.path.splitext(os.path.basename(__file__))[0]
         output_filename, output_summary = generate_output_filenames(script_name)
 
-        write_results(output_filename, stats, results, total_time)
+        write_results(output_filename, results)
         write_summary(output_summary, stats, total_time, load_tester.metrics)
 
         print(f"\nResults written to {output_filename}")

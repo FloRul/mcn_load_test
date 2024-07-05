@@ -19,3 +19,9 @@ Traceback (most recent call last):
     raise JSONDecodeError("Expecting value", s, err.value) from None
 json.decoder.JSONDecodeError: Expecting value: line 1 column 1 (char 0)
 
+2024-07-05 15:46:14,811 - ERROR - An error occurred: write_results() takes 2 positional arguments but 4 were given
+Traceback (most recent call last):
+  File "/Users/florianrumiel/Documents/GitHub/mcn_load_test/main.py", line 225, in main
+    write_results(output_filename, stats, results, total_time)
+TypeError: write_results() takes 2 positional arguments but 4 were given
+
