@@ -1,32 +1,83 @@
-﻿from typing import Callable, List, Tuple
+﻿from typing import Callable, List, Tuple, Dict, Any
 import statistics
 import asyncio
 import websockets
 import json
 import time
 
+
 class Metric:
-    def __init__(self, name: str, function: Callable[[dict, dict], float]):
+    """
+    Represents a metric used to compute scores for prompts and responses.
+
+    Attributes:
+        name (str): The name of the metric.
+        function (Callable[[dict, dict], float]): The function used to compute the score.
+        failure_condition (Callable[[dict, dict], bool], optional): The condition that determines if a response is considered a failure. Defaults to None.
+        scores (List[float]): The list of computed scores.
+        failed_responses (List[Dict[str, Any]]): The list of failed responses.
+    """
+
+    def __init__(
+        self,
+        name: str,
+        function: Callable[[dict, dict], float],
+        failure_condition: Callable[[dict, dict], bool] = None,
+    ):
         self.name: str = name
         self.function: Callable[[dict, dict], float] = function
+        self.failure_condition: Callable[[dict, dict, float], bool] = failure_condition or (lambda p, r: True)
         self.scores: List[float] = []
+        self.failed_responses: List[Dict[str, Any]] = []
 
     def compute(self, prompt: dict, response: dict) -> float:
+        """
+        Computes the score for a given prompt and response.
+
+        Args:
+            prompt (dict): The prompt data.
+            response (dict): The response data.
+
+        Returns:
+            float: The computed score.
+        """
+
         try:
             score: float = self.function(prompt, response)
             self.scores.append(score)
+            if self.failure_condition(prompt, response, score):
+                self.failed_responses.append(
+                    {
+                        "prompt": prompt,
+                        "response": response,
+                        "reason": f"Failed condition check - {self.name}",
+                    }
+                )
             return score
-        except KeyError:
-            print(
-                f"Error: {self.name} could not compute score due to missing key in input or output."
+        except Exception as e:
+            print(f"Error: {self.name} could not compute score due to an error.")
+            self.failed_responses.append(
+                {"prompt": prompt, "response": response, "error": str(e)}
             )
             return 0.0
 
     def get_average(self) -> float:
+        """
+        Computes the average score.
+
+        Returns:
+            float: The average score.
+        """
         return statistics.mean(self.scores) if self.scores else 0.0
 
-    def get_results(self) -> Tuple[str, float, List[float]]:
-        return self.name, self.get_average(), self.scores
+    def get_results(self) -> Tuple[str, float, List[float], List[Dict[str, Any]]]:
+        """
+        Returns the metric results.
+
+        Returns:
+            Tuple[str, float, List[float], List[Dict[str, Any]]]: A tuple containing the metric name, average score, list of scores, and list of failed responses.
+        """
+        return self.name, self.get_average(), self.scores, self.failed_responses
 
 
 class WebSocketLoadTester:

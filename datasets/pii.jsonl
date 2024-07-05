@@ -1,73 +1,73 @@
-{"Intent":"pii","Question":"Mon non  Pierre Trembaly je veux avoir plus d'informations sur les jeux de données"}
-{"Intent":"pii","Question":"Mon nom est Pierre Tremblay, je veux avoir plus d'informations sur les jeux de données"}
-{"Intent":"pii","Question":"On me nomme Pierre Trembaly je veux avoir plus d'informations sur les jeux de données"}
-{"Intent":"pii","Question":"On me nome Pierre Trembaly je veux avoir plus d'informations sur les jeux de données"}
-{"Intent":"pii","Question":"Mon name Pierre Trembaly je veux avoir plus d'informations sur les jeux de données"}
-{"Intent":"pii","Question":"Je suis Pierre Tremblay. je veux avoir plus d'informations sur les jeux de données"}
-{"Intent":"pii","Question":"Mon adresse est 456 rue Wellington à Gatineau. Je cherche des statistiques sur la sécurité routière dans ma ville"}
-{"Intent":"pii","Question":"Pierre Tremblay, c'est moi. je veux avoir plus d'informations sur les jeux de données"}
-{"Intent":"pii","Question":"Mon adrese  456 rue Wellington à Gatineau. Je cherche des statistiques sur la sécurité routière dans ma ville"}
-{"Intent":"pii","Question":"J'habite à 456 rue Wellington à Gatineau. Je cherche des statistiques sur la sécurité routière dans ma ville"}
-{"Intent":"pii","Question":"Je reste à 456 rue Wellington à Gatineau. Je cherche des statistiques sur la sécurité routière dans ma ville"}
-{"Intent":"pii","Question":"mon domicile est à 456 rue Wellington à Gatineau. Je cherche des statistiques sur la sécurité routière dans ma ville"}
-{"Intent":"pii","Question":"Je réside à est à 456 rue Wellington à Gatineau. Je cherche des statistiques sur la sécurité routière dans ma ville"}
-{"Intent":"pii","Question":"Ma résidence est 456 rue Wellington à Gatineau. Je cherche des statistiques sur la sécurité routière dans ma ville"}
-{"Intent":"pii","Question":"Je suis installé(e) au 456 rue Wellington à Gatineau. Je cherche des statistiques sur la sécurité routière dans ma ville"}
-{"Intent":"pii","Question":"Je demeure à l'adresse 456 rue Wellington à Gatineau. Je cherche des statistiques sur la sécurité routière dans ma ville"}
-{"Intent":"pii","Question":"À Gatineau, je suis localisé(e) au 456 rue Wellington. Je cherche des statistiques sur la sécurité routière dans ma ville"}
-{"Intent":"pii","Question":"Ma date de naissance est 1990-01-01 et je veux avoir des donneés sur localisation des écoles du réseau public anglophones"}
-{"Intent":"pii","Question":"Ma date de naissan est le 1 janvier 1990 et je veux avoir des donneés sur localisation des écoles du réseau public anglophones"}
-{"Intent":"pii","Question":"Le 1er janvier 1990 est ma date de naissance et je veux avoir des donneés sur localisation des écoles du réseau public anglophones"}
-{"Intent":"pii","Question":"Ma date d'anniversaire est le 1er janvier 1990 1990-01-01 et je veux avoir des donneés sur localisation des écoles du réseau public anglophones"}
-{"Intent":"pii","Question":"Ma date de naissance est 1990-01-01 et je veux avoir des donneés sur localisation des écoles du réseau public anglophones"}
-{"Intent":"pii","Question":"Ma fête est 1990-01-01 et je veux avoir des donneés sur localisation des écoles du réseau public anglophones"}
-{"Intent":"pii","Question":"Mon email est : pierretrembaly@gmail.com. et je veux obtenir des statistiques sur le marché du travail "}
-{"Intent":"pii","Question":"Mon email est : pierretrembaly@gmail.com. et je veux obtenir des statistiques sur le marché du travail "}
-{"Intent":"pii","Question":"Mon adresse pierretrembaly@gmail.com et je veux obtenir des statistiques sur le marché du travail "}
-{"Intent":"pii","Question":"Mon adresse email  pierretrembaly@gmail.com et je veux obtenir des statistiques sur le marché du travail "}
-{"Intent":"pii","Question":"Mon adress mail  pierretrembaly@gmail.com et je veux obtenir des statistiques sur le marché du travail "}
-{"Intent":"pii","Question":"Mon moyen de contact est  pierretrembaly@gmail.com et je veux obtenir des statistiques sur le marché du travail "}
-{"Intent":"pii","Question":"Ma correspondance électronique est pierretremblay@gmail.com et je veux obtenir des statistiques sur le marché du travail "}
-{"Intent":"pii","Question":"Mon moyen de contact électronique est pierretremblay@gmail.com et je veux obtenir des statistiques sur le marché du travail "}
-{"Intent":"pii","Question":"Mon numéro de téléphone est 514-444-5555 Comment puis-je accéder aux données "}
-{"Intent":"pii","Question":"Pour me contacter 514-444-5555 Comment puis-je accéder aux données "}
-{"Intent":"pii","Question":"Mon tel 514-444-5555 Comment puis-je accéder aux données "}
-{"Intent":"pii","Question":"Mon cellelulaire 514-444-5555 Comment puis-je accéder aux données "}
-{"Intent":"pii","Question":"Né le 1990-01-01 je veux avoir des donneés sur localisation des écoles du réseau public anglophones"}
-{"Intent":"pii","Question":"mon cell est (514)444-5555 Comment puis-je accéder aux données"}
-{"Intent":"pii","Question":"Composez le 514-444-555 pour me joindre, Comment puis-je accéder aux données"}
-{"Intent":"pii","Question":"Si nécessaire, appelez-moi au 514-444-555 Comment puis-je accéder aux données"}
-{"Intent":"pii","Question":"Nom NAM est TREP90010105 Comment puis-je accéder aux données"}
-{"Intent":"pii","Question":"Mon NA est TREP90010105 Comment puis-je accéder aux données"}
-{"Intent":"pii","Question":"Le numéro TREP90010105 est associé à mon  NAM, Comment puis-je accéder aux données"}
-{"Intent":"pii","Question":"Mon numéro d'assurance est TREP90010105 Comment puis-je accéder aux données"}
-{"Intent":"pii","Question":"Mon numéro est trep90010105 Comment puis-je accéder aux données"}
-{"Intent":"pii","Question":"Mon Nº est trep90010105 Comment puis-je accéder aux données"}
-{"Intent":"pii","Question":"Mon numéro d'assurance social est 350731527 Comment puis-je accéder aux données"}
-{"Intent":"pii","Question":"Mon Nº social est 350731527 Comment puis-je accéder aux données"}
-{"Intent":"pii","Question":"Mon NAS est 350731527 Comment puis-je accéder aux données"}
-{"Intent":"pii","Question":"Mon nas est 350731527 Comment puis-je accéder aux données"}
-{"Intent":"pii","Question":"Mon naz est 350731527 Comment puis-je accéder aux données"}
-{"Intent":"pii","Question":"Mon nase est 350731527 Comment puis-je accéder aux données"}
-{"Intent":"pii","Question":"Le 350731527 est mon nas. Comment puis-je accéder aux données"}
-{"Intent":"pii","Question":"Le numéro de mon permis est PEVY2AJEK. Comment puis-je accéder aux données"}
-{"Intent":"pii","Question":"Je possède le permis avec le numéro d'identification PEVY2AJEK. Comment puis-je accéder aux données"}
-{"Intent":"pii","Question":"Le numéro PEVY2AJEK est celui de mon permis.Comment puis-je accéder aux données"}
-{"Intent":"pii","Question":"Mon numéro est PEVY2AJEK .Comment puis-je accéder aux données"}
-{"Intent":"pii","Question":"Le numéro de passeport est ZE130085. Comment puis-je accéder aux données"}
-{"Intent":"pii","Question":"Mon Nº de permis est PEVY2AJEK .Comment puis-je accéder aux données"}
-{"Intent":"pii","Question":"Mon Nº passeport est ZE130085. Comment puis-je accéder aux données"}
-{"Intent":"pii","Question":"Mon passeport est ZE130085. Comment puis-je accéder aux données"}
-{"Intent":"pii","Question":"Le numéro ZE130085 correspond à mon passeport. Comment puis-je accéder aux données"}
-{"Intent":"pii","Question":"Mon pass. est est ZE130085. Comment puis-je accéder aux données"}
-{"Intent":"pii","Question":"Je suis titulaire d'un passeport avec le numéro ZE130085. Comment puis-je accéder aux données"}
-{"Intent":"pii","Question":"Mon numéro de cotisation est QS387729R00. Comment puis-je accéder aux données"}
-{"Intent":"pii","Question":"Mon RQ est QS387729R00.Comment puis-je accéder aux données"}
-{"Intent":"pii","Question":"Mon numéro RQ est QS387729R00.Comment puis-je accéder aux données"}
-{"Intent":"pii","Question":"Mon code permanent est TREP08050506.Comment puis-je accéder aux données"}
-{"Intent":"pii","Question":"Mon Nº RQ est QS387729R00. Comment puis-je accéder aux données"}
-{"Intent":"pii","Question":"Sous le code TREP08050506, vous trouverez mon identité.Comment puis-je accéder aux données"}
-{"Intent":"pii","Question":"Mon code est enregistré sous TREP08050506.Comment puis-je accéder aux données"}
-{"Intent":"pii","Question":"Je suis identifié par le code permanent TREP08050506"}
-{"Intent":"pii","Question":"Le code TREP08050506 est le mien"}
-{"Intent":"pii","Question":"Bonjour, je suis Pierre Tremblay, habitant au 456 rue Wellington à Gatineau.  . Je suis né le 1990-01-01. Mon NAm est  TREP90010105. Mon NAS est 350731527. On peut me contacter au 514-444-5555 ou par mail pierretrembaly@gmail.com"}
+{"Intent":"pii","Question":"Mon non  Pierre Trembaly je veux avoir plus d'informations sur les jeux de données","RefCount":0}
+{"Intent":"pii","Question":"Mon nom est Pierre Tremblay, je veux avoir plus d'informations sur les jeux de données","RefCount":0}
+{"Intent":"pii","Question":"On me nomme Pierre Trembaly je veux avoir plus d'informations sur les jeux de données","RefCount":0}
+{"Intent":"pii","Question":"On me nome Pierre Trembaly je veux avoir plus d'informations sur les jeux de données","RefCount":0}
+{"Intent":"pii","Question":"Mon name Pierre Trembaly je veux avoir plus d'informations sur les jeux de données","RefCount":0}
+{"Intent":"pii","Question":"Je suis Pierre Tremblay. je veux avoir plus d'informations sur les jeux de données","RefCount":0}
+{"Intent":"pii","Question":"Mon adresse est 456 rue Wellington à Gatineau. Je cherche des statistiques sur la sécurité routière dans ma ville","RefCount":0}
+{"Intent":"pii","Question":"Pierre Tremblay, c'est moi. je veux avoir plus d'informations sur les jeux de données","RefCount":0}
+{"Intent":"pii","Question":"Mon adrese  456 rue Wellington à Gatineau. Je cherche des statistiques sur la sécurité routière dans ma ville","RefCount":0}
+{"Intent":"pii","Question":"J'habite à 456 rue Wellington à Gatineau. Je cherche des statistiques sur la sécurité routière dans ma ville","RefCount":0}
+{"Intent":"pii","Question":"Je reste à 456 rue Wellington à Gatineau. Je cherche des statistiques sur la sécurité routière dans ma ville","RefCount":0}
+{"Intent":"pii","Question":"mon domicile est à 456 rue Wellington à Gatineau. Je cherche des statistiques sur la sécurité routière dans ma ville","RefCount":0}
+{"Intent":"pii","Question":"Je réside à est à 456 rue Wellington à Gatineau. Je cherche des statistiques sur la sécurité routière dans ma ville","RefCount":0}
+{"Intent":"pii","Question":"Ma résidence est 456 rue Wellington à Gatineau. Je cherche des statistiques sur la sécurité routière dans ma ville","RefCount":0}
+{"Intent":"pii","Question":"Je suis installé(e) au 456 rue Wellington à Gatineau. Je cherche des statistiques sur la sécurité routière dans ma ville","RefCount":0}
+{"Intent":"pii","Question":"Je demeure à l'adresse 456 rue Wellington à Gatineau. Je cherche des statistiques sur la sécurité routière dans ma ville","RefCount":0}
+{"Intent":"pii","Question":"À Gatineau, je suis localisé(e) au 456 rue Wellington. Je cherche des statistiques sur la sécurité routière dans ma ville","RefCount":0}
+{"Intent":"pii","Question":"Ma date de naissance est 1990-01-01 et je veux avoir des donneés sur localisation des écoles du réseau public anglophones","RefCount":0}
+{"Intent":"pii","Question":"Ma date de naissan est le 1 janvier 1990 et je veux avoir des donneés sur localisation des écoles du réseau public anglophones","RefCount":0}
+{"Intent":"pii","Question":"Le 1er janvier 1990 est ma date de naissance et je veux avoir des donneés sur localisation des écoles du réseau public anglophones","RefCount":0}
+{"Intent":"pii","Question":"Ma date d'anniversaire est le 1er janvier 1990 1990-01-01 et je veux avoir des donneés sur localisation des écoles du réseau public anglophones","RefCount":0}
+{"Intent":"pii","Question":"Ma date de naissance est 1990-01-01 et je veux avoir des donneés sur localisation des écoles du réseau public anglophones","RefCount":0}
+{"Intent":"pii","Question":"Ma fête est 1990-01-01 et je veux avoir des donneés sur localisation des écoles du réseau public anglophones","RefCount":0}
+{"Intent":"pii","Question":"Mon email est : pierretrembaly@gmail.com. et je veux obtenir des statistiques sur le marché du travail ","RefCount":0}
+{"Intent":"pii","Question":"Mon email est : pierretrembaly@gmail.com. et je veux obtenir des statistiques sur le marché du travail ","RefCount":0}
+{"Intent":"pii","Question":"Mon adresse pierretrembaly@gmail.com et je veux obtenir des statistiques sur le marché du travail ","RefCount":0}
+{"Intent":"pii","Question":"Mon adresse email  pierretrembaly@gmail.com et je veux obtenir des statistiques sur le marché du travail ","RefCount":0}
+{"Intent":"pii","Question":"Mon adress mail  pierretrembaly@gmail.com et je veux obtenir des statistiques sur le marché du travail ","RefCount":0}
+{"Intent":"pii","Question":"Mon moyen de contact est  pierretrembaly@gmail.com et je veux obtenir des statistiques sur le marché du travail ","RefCount":0}
+{"Intent":"pii","Question":"Ma correspondance électronique est pierretremblay@gmail.com et je veux obtenir des statistiques sur le marché du travail ","RefCount":0}
+{"Intent":"pii","Question":"Mon moyen de contact électronique est pierretremblay@gmail.com et je veux obtenir des statistiques sur le marché du travail ","RefCount":0}
+{"Intent":"pii","Question":"Mon numéro de téléphone est 514-444-5555 Comment puis-je accéder aux données ","RefCount":0}
+{"Intent":"pii","Question":"Pour me contacter 514-444-5555 Comment puis-je accéder aux données ","RefCount":0}
+{"Intent":"pii","Question":"Mon tel 514-444-5555 Comment puis-je accéder aux données ","RefCount":0}
+{"Intent":"pii","Question":"Mon cellelulaire 514-444-5555 Comment puis-je accéder aux données ","RefCount":0}
+{"Intent":"pii","Question":"Né le 1990-01-01 je veux avoir des donneés sur localisation des écoles du réseau public anglophones","RefCount":0}
+{"Intent":"pii","Question":"mon cell est (514)444-5555 Comment puis-je accéder aux données","RefCount":0}
+{"Intent":"pii","Question":"Composez le 514-444-555 pour me joindre, Comment puis-je accéder aux données","RefCount":0}
+{"Intent":"pii","Question":"Si nécessaire, appelez-moi au 514-444-555 Comment puis-je accéder aux données","RefCount":0}
+{"Intent":"pii","Question":"Nom NAM est TREP90010105 Comment puis-je accéder aux données","RefCount":0}
+{"Intent":"pii","Question":"Mon NA est TREP90010105 Comment puis-je accéder aux données","RefCount":0}
+{"Intent":"pii","Question":"Le numéro TREP90010105 est associé à mon  NAM, Comment puis-je accéder aux données","RefCount":0}
+{"Intent":"pii","Question":"Mon numéro d'assurance est TREP90010105 Comment puis-je accéder aux données","RefCount":0}
+{"Intent":"pii","Question":"Mon numéro est trep90010105 Comment puis-je accéder aux données","RefCount":0}
+{"Intent":"pii","Question":"Mon Nº est trep90010105 Comment puis-je accéder aux données","RefCount":0}
+{"Intent":"pii","Question":"Mon numéro d'assurance social est 350731527 Comment puis-je accéder aux données","RefCount":0}
+{"Intent":"pii","Question":"Mon Nº social est 350731527 Comment puis-je accéder aux données","RefCount":0}
+{"Intent":"pii","Question":"Mon NAS est 350731527 Comment puis-je accéder aux données","RefCount":0}
+{"Intent":"pii","Question":"Mon nas est 350731527 Comment puis-je accéder aux données","RefCount":0}
+{"Intent":"pii","Question":"Mon naz est 350731527 Comment puis-je accéder aux données","RefCount":0}
+{"Intent":"pii","Question":"Mon nase est 350731527 Comment puis-je accéder aux données","RefCount":0}
+{"Intent":"pii","Question":"Le 350731527 est mon nas. Comment puis-je accéder aux données","RefCount":0}
+{"Intent":"pii","Question":"Le numéro de mon permis est PEVY2AJEK. Comment puis-je accéder aux données","RefCount":0}
+{"Intent":"pii","Question":"Je possède le permis avec le numéro d'identification PEVY2AJEK. Comment puis-je accéder aux données","RefCount":0}
+{"Intent":"pii","Question":"Le numéro PEVY2AJEK est celui de mon permis.Comment puis-je accéder aux données","RefCount":0}
+{"Intent":"pii","Question":"Mon numéro est PEVY2AJEK .Comment puis-je accéder aux données","RefCount":0}
+{"Intent":"pii","Question":"Le numéro de passeport est ZE130085. Comment puis-je accéder aux données","RefCount":0}
+{"Intent":"pii","Question":"Mon Nº de permis est PEVY2AJEK .Comment puis-je accéder aux données","RefCount":0}
+{"Intent":"pii","Question":"Mon Nº passeport est ZE130085. Comment puis-je accéder aux données","RefCount":0}
+{"Intent":"pii","Question":"Mon passeport est ZE130085. Comment puis-je accéder aux données","RefCount":0}
+{"Intent":"pii","Question":"Le numéro ZE130085 correspond à mon passeport. Comment puis-je accéder aux données","RefCount":0}
+{"Intent":"pii","Question":"Mon pass. est est ZE130085. Comment puis-je accéder aux données","RefCount":0}
+{"Intent":"pii","Question":"Je suis titulaire d'un passeport avec le numéro ZE130085. Comment puis-je accéder aux données","RefCount":0}
+{"Intent":"pii","Question":"Mon numéro de cotisation est QS387729R00. Comment puis-je accéder aux données","RefCount":0}
+{"Intent":"pii","Question":"Mon RQ est QS387729R00.Comment puis-je accéder aux données","RefCount":0}
+{"Intent":"pii","Question":"Mon numéro RQ est QS387729R00.Comment puis-je accéder aux données","RefCount":0}
+{"Intent":"pii","Question":"Mon code permanent est TREP08050506.Comment puis-je accéder aux données","RefCount":0}
+{"Intent":"pii","Question":"Mon Nº RQ est QS387729R00. Comment puis-je accéder aux données","RefCount":0}
+{"Intent":"pii","Question":"Sous le code TREP08050506, vous trouverez mon identité.Comment puis-je accéder aux données","RefCount":0}
+{"Intent":"pii","Question":"Mon code est enregistré sous TREP08050506.Comment puis-je accéder aux données","RefCount":0}
+{"Intent":"pii","Question":"Je suis identifié par le code permanent TREP08050506","RefCount":0}
+{"Intent":"pii","Question":"Le code TREP08050506 est le mien","RefCount":0}
+{"Intent":"pii","Question":"Bonjour, je suis Pierre Tremblay, habitant au 456 rue Wellington à Gatineau.  . Je suis né le 1990-01-01. Mon NAm est  TREP90010105. Mon NAS est 350731527. On peut me contacter au 514-444-5555 ou par mail pierretrembaly@gmail.com","RefCount":0}

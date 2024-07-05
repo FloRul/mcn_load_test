@@ -10,12 +10,15 @@ from typing import List, Tuple, Dict, Any
 
 from core import Metric, WebSocketLoadTester
 
+
 def parse_arguments() -> argparse.Namespace:
     parser = argparse.ArgumentParser(
         description="WebSocket Load Tester for AWS API Gateway"
     )
     parser.add_argument("websocket_url", help="WebSocket URL of the AWS API Gateway")
-    parser.add_argument("prompts_folder", help="Folder containing JSON files with prompts")
+    parser.add_argument(
+        "prompts_folder", help="Folder containing JSON files with prompts"
+    )
     parser.add_argument(
         "--origin", help="Origin for the WebSocket connection", default=None
     )
@@ -30,12 +33,13 @@ def parse_arguments() -> argparse.Namespace:
 
     return args
 
+
 def read_prompts(folder_path: str) -> list[dict]:
     prompts = []
     for filename in os.listdir(folder_path):
-        if filename.endswith('.jsonl'):
+        if filename.endswith(".jsonl"):
             file_path = os.path.join(folder_path, filename)
-            with open(file_path, 'r', encoding='utf8') as file:
+            with open(file_path, "r", encoding="utf8") as file:
                 for line in file:
                     try:
                         prompt = json.loads(line)
@@ -43,6 +47,7 @@ def read_prompts(folder_path: str) -> list[dict]:
                     except (json.JSONDecodeError, KeyError):
                         print(f"Warning: Skipping invalid line in {filename}")
     return prompts
+
 
 def load_prompts(file_path: str) -> List[dict]:
     prompts = []
@@ -132,9 +137,19 @@ def write_summary(
     }
 
     for metric in metrics:
-        metric_name, metric_average, metric_scores = metric.get_results()
+        metric_name, metric_average, metric_scores, failed_responses = (
+            metric.get_results()
+        )
         summary["metrics"][metric_name] = {
             "average": metric_average,
+            "failed_responses": [
+                {
+                    "prompt": failed["prompt"],
+                    "response": failed["response"],
+                    "reason": failed.get("reason", failed.get("error", "Unknown")),
+                }
+                for failed in failed_responses
+            ],
         }
 
     with open(filename, "w", encoding="utf8") as f:
@@ -158,17 +173,27 @@ def get_metrics() -> List[Metric]:
             return 1.0 if input["Intent"] == output["intent"] else 0.0
         except KeyError:
             return 0.0
+    
+    def ref_recall_count(input: dict, output: dict) -> float:
+        try:
+            return 1.0 if input["RefCount"] == len(output["references"]) else 0.0
+        except KeyError:
+            return 0.0
 
     return [
-        Metric("classification_accuracy", classification_accuracy),
+        Metric("classification_accuracy", classification_accuracy, failure_condition=lambda _, __, score: score == 0.0),
+        Metric("ref_recall_count", ref_recall_count, failure_condition=lambda _, __, score: score == 0.0),
     ]
+
 
 async def main():
     try:
         args = parse_arguments()
         prompts = read_prompts(args.prompts_folder)
 
-        load_tester = WebSocketLoadTester(args.websocket_url, args.origin, get_metrics())
+        load_tester = WebSocketLoadTester(
+            args.websocket_url, args.origin, get_metrics()
+        )
 
         print(
             f"Starting load test with {len(prompts)} prompts and up to {args.connections} concurrent connections"
@@ -193,6 +218,7 @@ async def main():
         print(error_msg)
         logging.error(error_msg)
         raise  # Re-raise the exception after logging
+
 
 if __name__ == "__main__":
     asyncio.run(main())
