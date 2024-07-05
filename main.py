@@ -177,14 +177,14 @@ def get_metrics() -> List[Metric]:
     def ref_recall_count(input: dict, output: dict) -> float:
         try:
             out_ref_count = len(output["references"])
-            in_ref_count = len(input["RefCount"])
+            in_ref_count = int(input["RefCount"])
 
             if (
                 in_ref_count == 0 or in_ref_count == 1
             ) and in_ref_count < out_ref_count:
                 return 1.0
             else:
-                if in_ref_count <= out_ref_count:
+                if out_ref_count >= 1:
                     return 1.0
                 else:
                     return 0.0
