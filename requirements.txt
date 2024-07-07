@@ -1,0 +1,4 @@
+﻿langfuse
+python-dotenv
+websockets
+tqdm

@@ -11,7 +11,6 @@ from typing import List, Tuple, Dict, Any
 
 from core import Metric, WebSocketLoadTester
 
-
 def parse_arguments() -> argparse.Namespace:
     parser = argparse.ArgumentParser(
         description="WebSocket Load Tester for AWS API Gateway"
@@ -48,16 +47,6 @@ def read_prompts(folder_path: str) -> list[dict]:
                     except (json.JSONDecodeError, KeyError):
                         print(f"Warning: Skipping invalid line in {filename}")
     return prompts
-
-
-def load_prompts(file_path: str) -> List[dict]:
-    prompts = []
-    with open(file_path, "r", encoding="utf8") as f:
-        for line in f:
-            data = json.loads(line)
-            prompts.append(data)
-    return prompts
-
 
 def calculate_statistics(results: List[Tuple[str, str, float]]) -> Dict[str, Any]:
     latencies = [latency for _, _, latency in results if latency > 0]

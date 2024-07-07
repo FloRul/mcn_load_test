@@ -1,9 +1,13 @@
-﻿from typing import Callable, List, Tuple, Dict, Any
+﻿import datetime
+from typing import Callable, List, Tuple, Dict, Any
 import statistics
 import asyncio
 import websockets
 import json
 import time
+from langfuse import Langfuse
+from dotenv import load_dotenv
+import os
 
 
 class Metric:
@@ -26,7 +30,9 @@ class Metric:
     ):
         self.name: str = name
         self.function: Callable[[dict, dict], float] = function
-        self.failure_condition: Callable[[dict, dict, float], bool] = failure_condition or (lambda p, r: True)
+        self.failure_condition: Callable[[dict, dict, float], bool] = (
+            failure_condition or (lambda p, r: True)
+        )
         self.scores: List[float] = []
         self.failed_responses: List[Dict[str, Any]] = []
 
@@ -89,7 +95,7 @@ class WebSocketLoadTester:
         self.total_requests = 0
         self.metrics = metrics
 
-    async def send_message(self, prompt: dict):
+    async def asend_message(self, prompt: dict):
         try:
             async with websockets.connect(
                 self.websocket_url, origin=self.origin
@@ -123,13 +129,28 @@ class WebSocketLoadTester:
 
         async def bounded_send(prompt: dict):
             async with semaphore:
-                result = await self.send_message(prompt)
+                result = await self.asend_message(prompt)
+                try:
+                    # Attempt to parse the response as JSON
+                    response_json = json.loads(result[1])
+                except json.JSONDecodeError as e:
+                    print(f"Failed to parse response as JSON: {e}")
+                    print(f"Raw response: {result[1]}")
+                    # Create a dummy response object for metrics computation
+                    response_json = {
+                        "error": "Invalid JSON response",
+                        "raw_response": result[1],
+                    }
+
                 # Compute metrics for this result
                 for metric in self.metrics:
-                    metric.compute(
-                        prompt, json.loads(result[1])
-                    )  # result[1] is the response
-                return result
+                    metric.compute(prompt, response_json)
+
+                return (
+                    prompt,
+                    response_json,
+                    result[2],
+                )  # Return parsed JSON or error dict
 
         tasks = [bounded_send(prompt) for prompt in prompts]
         results = await asyncio.gather(*tasks)

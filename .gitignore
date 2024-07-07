@@ -4,3 +4,4 @@ load_test_summary.json
 results
 __pycache__/
 dataset_reader/__pycache__/*
+.env
