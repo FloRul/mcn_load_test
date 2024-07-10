@@ -23,8 +23,8 @@ This project provides a set of tools to perform load testing on WebSocket endpoi
 
 1. Clone this repository:
    ```bash
-   git clone https://github.com/YourUsername/websocket-load-tester.git
-   cd websocket-load-tester
+   git clone https://github.com/FloRul/mcn_load_test.git
+   cd mcn_load_test
    ```
 
 2. Ensure you have the necessary permissions to execute the bash script:
