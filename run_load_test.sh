@@ -15,7 +15,7 @@ python3 -m venv venv || { echo "Failed to create virtual environment"; exit 1; }
 source venv/bin/activate || { echo "Failed to activate virtual environment"; exit 1; }
 
 # Install dependencies
-pip install websockets urllib3
+pip install -r requirements.txt || { echo "Failed to install dependencies"; exit 1; }
 
 # Check if prompts folder exists and contains JSON files
 if [ ! -d "$PROMPTS_FOLDER" ] || [ -z "$(ls -A $PROMPTS_FOLDER/*.jsonl 2>/dev/null)" ]; then

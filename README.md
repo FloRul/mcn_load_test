@@ -1,6 +1,6 @@
 ﻿# WebSocket Load Tester for AWS API Gateway
 
-This project provides a set of tools to perform load testing on WebSocket endpoints, specifically designed for AWS API Gateway. It includes a Python script for executing the load test and a PowerShell script for running the test and analyzing results.
+This project provides a set of tools to perform load testing on WebSocket endpoints, specifically designed for AWS API Gateway. It includes Python scripts for executing the load test and a bash script for setting up the environment and running the test.
 
 ## Features
 
@@ -8,53 +8,64 @@ This project provides a set of tools to perform load testing on WebSocket endpoi
 - Customizable number of connections and prompts
 - Progress tracking during test execution
 - Detailed latency statistics (average, median, min, max, 95th and 99th percentiles)
-- JSON summary output for easy integration with other tools
-- Configurable thresholds for test pass/fail criteria
+- JSON output for both detailed results and summary
 - Customizable metrics for evaluating responses
+- Error logging
+- Automated setup and execution via bash script
 
 ## Requirements
 
 - Python 3.9+
-- PowerShell (for Windows users) or bash shell
-- `websockets` Python library
+- Bash shell (for running the setup script)
+- Dependencies listed in `requirements.txt`
 
-## Installation
+## Installation and Setup
 
 1. Clone this repository:
    ```bash
-   git clone https://github.com/FloRul/mcn_load_test.git
-   cd mcn-load-tester
+   git clone https://github.com/YourUsername/websocket-load-tester.git
+   cd websocket-load-tester
    ```
 
-2. (Optional) Create a virtual environment:
+2. Ensure you have the necessary permissions to execute the bash script:
    ```bash
-   python -m venv venv
-   source venv/bin/activate  # On Windows, use: .\venv\Scripts\Activate.ps1
+   chmod +x run_load_test.sh
    ```
 
 ## Usage
 
 1. Prepare your test prompts:
-   Add into ./datasets a jsonl file with the following format : {"Intent":"dqgeneral","Question":"Je cherche des donnees..."}
-
-2. Configure the test parameters:
-   Open `run.sh` and modify the following variables as needed:
-   ```text
-   $WEBSOCKET_URL = "wss://your-api-gateway-url.execute-api.region.amazonaws.com/stage"
-   $ORIGIN = "https://example.com"
-   $PROMPTS_FOLDER = "./datasets"
-   $CONNECTIONS = 20
+   Create a folder named `datasets` in the project root, containing JSONL files with prompts in the following format:
+   ```json
+   {"Intent": "dqgeneral", "Question": "Je cherche des donnees...", "RefCount": "2"}
    ```
 
-3. Run the load test:
-   To override default DNS, pass it as argument.
+2. Run the load test using the bash script:
    ```bash
-   source ./run.sh  discussion.test.robco.si.gouv.qc.ca
+   ./run_load_test.sh [DNS]
    ```
+   Where `[DNS]` is an optional argument to specify the DNS to test. If not provided, it defaults to `dkmwo6pd6rra6.cloudfront.net`.
 
-4. Review the results:
+   The script will:
+   - Set up a virtual environment
+   - Install dependencies from `requirements.txt`
+   - Run the load test with the specified (or default) parameters
+   - Log the output to `load_test_output.log`
+
+3. Review the results:
    - The script will display a summary of the test results in the console.
-   - A detailed JSON summary will be saved in `main-YYYY-MM-DD_HH-MM-SS-summary.json`.
+   - A detailed JSON output will be saved in `results/main-YYYY-MM-DD_HH-MM-SS-output.json`.
+   - A JSON summary will be saved in `results/main-YYYY-MM-DD_HH-MM-SS-summary.json`.
+   - The full console output will be saved in `load_test_output.log`.
+
+## Configuration
+
+You can modify the following variables in the `run_load_test.sh` script to customize the test:
+
+- `WEBSOCKET_URL`: The WebSocket URL to test (default: `wss://${DNS}/socket`)
+- `ORIGIN`: The origin for the WebSocket connection (default: `https://${DNS}`)
+- `PROMPTS_FOLDER`: The folder containing the JSONL files with prompts (default: `./datasets`)
+- `CONNECTIONS`: The number of concurrent connections (default: 20)
 
 ## Understanding the Results
 
@@ -66,53 +77,17 @@ The load test provides the following metrics:
 - Requests per second: The average number of requests processed per second
 - Latency statistics: Average, median, min, max, 95th percentile, and 99th percentile latencies
 - Custom metrics: Results of user-defined metrics for evaluating responses
-- The list of failed query-response pairs according to their respective metric configuration
-
-## Customizing the Test
-
-To modify the test behavior or add new features:
-
-1. Edit `main.py` to change the core load testing logic.
-2. Modify `run.sh` to adjust how the test is executed and how results are processed.
 
 ## Customizing the Metrics
 
-The load tester supports custom metrics to evaluate the quality and correctness of responses. To add or modify metrics:
+To add or modify metrics, edit the `get_metrics()` function in `main.py`. See the "Customizing the Metrics" section in the code comments for detailed instructions.
 
-1. Open `main.py` and locate the `get_metrics()` function.
+## Error Handling and Logging
 
-2. Define new metric functions or modify existing ones. Each metric function should take two arguments (input and output) and return a float value.
-
-3. Create a new `Metric` object for each metric you want to use. The `Metric` constructor takes three arguments:
-   - `name`: A string identifier for the metric
-   - `function`: The metric function you defined
-   - `failure_condition`: (Optional) A function that determines if a response is considered a failure based on the metric score
-
-4. Add your new `Metric` objects to the list returned by `get_metrics()`.
-
-Example of adding a new metric:
-
-```python
-def get_metrics() -> List[Metric]:
-    def new_metric(input: dict, output: dict) -> float:
-        # Your metric logic here
-        return score
-
-    return [
-        # Existing metrics
-        Metric("classification_accuracy", classification_accuracy, failure_condition=lambda _, __, score: score == 0.0),
-        Metric("ref_recall_count", ref_recall_count, failure_condition=lambda _, __, score: score == 0.0),
-        # New metric
-        Metric("new_metric_name", new_metric, failure_condition=lambda _, __, score: score < 0.5),
-    ]
-```
-
-The results of your custom metrics will be included in the JSON summary output, showing the average score and any failed responses for each metric.
+- The Python script logs errors to `load_test.log`.
+- The bash script logs all output to `load_test_output.log`.
+- If the Python script fails, the bash script will display the last 20 lines of the log for quick debugging.
 
 ## Contributing
 
 Contributions are welcome! Please feel free to submit a Pull Request.
-
-## License
-
-This project is licensed under the MIT License - see the LICENSE file for details.
