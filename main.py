@@ -11,6 +11,7 @@ from typing import List, Tuple, Dict, Any
 
 from core import Metric, WebSocketLoadTester
 
+
 def parse_arguments() -> argparse.Namespace:
     parser = argparse.ArgumentParser(
         description="WebSocket Load Tester for AWS API Gateway"
@@ -48,12 +49,15 @@ def read_prompts(folder_path: str) -> list[dict]:
                         print(f"Warning: Skipping invalid line in {filename}")
     return prompts
 
-def calculate_statistics(results: List[Tuple[str, str, float]]) -> Dict[str, Any]:
+
+def calculate_statistics(results: List[Tuple[str, dict, float]]) -> Dict[str, Any]:
     latencies = [latency for _, _, latency in results if latency > 0]
     return {
         "total_requests": len(results),
         "successful_requests": sum(
-            1 for _, response, _ in results if not response.startswith("Une erreur")
+            1
+            for _, response, _ in results
+            if not response["message"].startswith("Une erreur")
         ),
         "latency": {
             "average": statistics.mean(latencies) if latencies else 0,
@@ -92,11 +96,10 @@ def write_results(
 
     for prompt, response, latency in results:
         # Create a hash of the request
-        request_hash = hashlib.md5(json.dumps(prompt).encode()).hexdigest()
+        request_hash = hashlib.md5(json.dumps(prompt["Question"]).encode()).hexdigest()
 
         # Parse the response JSON
-        response_json = json.loads(response)
-        message = response_json.get("message", "").lstrip("\n")
+        message = response.get("message", "").lstrip("\n")
 
         # Create the dictionary for this request
         result_dict = {"input": prompt, "output": message, "latency": latency}

@@ -1,12 +1,11 @@
-﻿import datetime
-import json
+﻿import json
 import asyncio
+import random
+import string
 from langfuse import Langfuse
 from dotenv import load_dotenv
 import os
-from typing import Generator
 from langfuse.client import DatasetItemClient
-from tqdm import tqdm
 from tqdm.asyncio import tqdm_asyncio
 
 from core import WebSocketLoadTester
@@ -34,17 +33,20 @@ def classification_accuracy(input: dict, output: dict) -> float:
         return 0.0
 
 
-async def process_item(ws_tester, item: DatasetItemClient):
-
+async def process_item(
+    ws_tester, item: DatasetItemClient, run_name: str = "load_test_run"
+):
     _, output, latency = await ws_tester.asend_message({"Question": item.input})
-    trace_id = item.metadata.get("traceId", None)
-    item.link(
-        trace_id=trace_id,
-        run_name="load_test_run" + datetime.datetime.now().isoformat(),
-    )
+    output = json.loads(output)
+    trace_id = output.get("traceId", None)
+    if len(trace_id) > 0:
+        try:
+            item.link(trace_or_observation=None, run_name=run_name, trace_id=trace_id)
+        except Exception as e:
+            print(f"Error: {str(e)}")
 
     # Check if output is a dictionary and has the 'intent' key
-    if isinstance(output, dict) and "intent" in output:
+    if isinstance(output, dict) and "intent" in output.keys():
         accuracy = 1.0 if item.metadata["intent"] == output["intent"] else 0.0
     else:
         accuracy = 0.0
@@ -59,10 +61,17 @@ async def process_item(ws_tester, item: DatasetItemClient):
     return output
 
 
-async def main():
+def generate_small_hash(length=8):
+    characters = string.ascii_letters + string.digits
+    return "".join(random.choice(characters) for _ in range(length))
+
+
+async def main(max_parallel_tasks: int = 5):
     ws_tester = WebSocketLoadTester(
         websocket_url=os.environ.get("WEBSOCKET_URL"), origin=os.environ.get("ORIGIN")
     )
+
+    run_name = "load_test_run" + generate_small_hash()
 
     if is_langfuse_enabled():
         dataset = langfuse.get_dataset(
@@ -70,7 +79,13 @@ async def main():
         )
         ws_tester.total_requests = len(dataset.items)
 
-        tasks = [process_item(ws_tester, item) for item in dataset.items]
+        semaphore = asyncio.Semaphore(max_parallel_tasks)
+
+        async def process_item_with_semaphore(item):
+            async with semaphore:
+                return await process_item(ws_tester, item, run_name=run_name)
+
+        tasks = [process_item_with_semaphore(item) for item in dataset.items]
         results = await tqdm_asyncio.gather(*tasks, desc="Running load test")
 
         print("\nLoad test completed.")
@@ -81,4 +96,17 @@ async def main():
 
 
 if __name__ == "__main__":
-    asyncio.run(main())
+    import argparse
+
+    parser = argparse.ArgumentParser(
+        description="Run load test with parallel execution limit"
+    )
+    parser.add_argument(
+        "--max_parallel",
+        type=int,
+        default=5,
+        help="Maximum number of parallel task executions",
+    )
+    args = parser.parse_args()
+
+    asyncio.run(main(max_parallel_tasks=args.max_parallel))
