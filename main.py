@@ -1,4 +1,5 @@
 ﻿import asyncio
+from collections import Counter
 import hashlib
 import json
 import time
@@ -8,6 +9,8 @@ import statistics
 import os
 import datetime
 from typing import List, Tuple, Dict, Any
+import zipfile
+from analytics import Analytics
 
 from core import Metric, WebSocketLoadTester
 
@@ -52,12 +55,23 @@ def read_prompts(folder_path: str) -> list[dict]:
 
 def calculate_statistics(results: List[Tuple[str, dict, float]]) -> Dict[str, Any]:
     latencies = [latency for _, _, latency in results if latency > 0]
+
+    intent_count = Counter(
+        [
+            response.get("intent", "")
+            for _, response, _ in results
+            if isinstance(response, dict)
+        ]
+    )
+
     return {
         "total_requests": len(results),
+        "per_intent": {intent: count for intent, count in intent_count.items()},
         "successful_requests": sum(
             1
             for _, response, _ in results
-            if not response["message"].startswith("Une erreur")
+            if isinstance(response, dict)
+            and not response.get("message", "").startswith("Une erreur")
         ),
         "latency": {
             "average": statistics.mean(latencies) if latencies else 0,
@@ -78,13 +92,12 @@ def calculate_statistics(results: List[Tuple[str, dict, float]]) -> Dict[str, An
     }
 
 
-def generate_output_filenames(script_name: str) -> Tuple[str, str]:
-    current_time = datetime.datetime.now().strftime("%Y-%m-%d_%H-%M-%S")
+def generate_output_filenames(script_name: str, suffix:str) -> Tuple[str, str]:
     output_dir = "results"
     os.makedirs(output_dir, exist_ok=True)
     return (
-        os.path.join(output_dir, f"{script_name}-{current_time}-output.json"),
-        os.path.join(output_dir, f"{script_name}-{current_time}-summary.json"),
+        os.path.join(output_dir, f"{script_name}-{suffix}-output.json"),
+        os.path.join(output_dir, f"{script_name}-{suffix}-summary.json"),
     )
 
 
@@ -100,9 +113,17 @@ def write_results(
 
         # Parse the response JSON
         message = response.get("message", "").lstrip("\n")
+        infered_intent = response.get("intent", "")
 
         # Create the dictionary for this request
-        result_dict = {"input": prompt, "output": message, "latency": latency}
+        result_dict = {
+            "input": prompt,
+            "output": {
+                "response": message,
+                "intent": infered_intent,
+            },
+            "latency": latency,
+        }
 
         # Use the hash as the key in the output dictionary
         output[request_hash] = result_dict
@@ -121,6 +142,7 @@ def write_summary(
         "total_time": total_time,
         "requests_per_second": stats["total_requests"] / total_time,
         "latency": stats["latency"],
+        "per_intent": stats["per_intent"],
         "metrics": {},
     }
 
@@ -142,10 +164,13 @@ def write_summary(
 
     with open(filename, "w", encoding="utf8") as f:
         json.dump(summary, f, indent=2)
+    return summary
 
 
 import traceback
 import logging
+import glob
+import shutil
 
 # Set up logging
 logging.basicConfig(
@@ -211,14 +236,32 @@ async def main():
         total_time = end_time - start_time
         stats = calculate_statistics(results)
 
-        script_name = os.path.splitext(os.path.basename(__file__))[0]
-        output_filename, output_summary = generate_output_filenames(script_name)
+        script_name = "load_test"
+        suffix = datetime.datetime.now().strftime("%Y-%m-%d_%H-%M-%S")
+        output_filename, output_summary = generate_output_filenames(script_name, suffix=suffix)
 
         write_results(output_filename, results)
-        write_summary(output_summary, stats, total_time, load_tester.metrics)
+        summary = write_summary(output_summary, stats, total_time, load_tester.metrics)
+        analytics = Analytics("results", "results", suffix=suffix)
+        analytics.plot_failed_responses_summary(summary)
+        analytics.plot_intent_distribution(stats)
+        
+        # Gather all the files with the specified suffix
+        files = glob.glob(f"results/*{suffix}*")
 
-        print(f"\nResults written to {output_filename}")
-        print(f"Summary results saved to {output_summary}\n")
+        # Create a zip file
+        zip_filename = f"results_{suffix}.zip"
+        with zipfile.ZipFile(zip_filename, "w") as zip_file:
+            # Add each file to the zip
+            for file in files:
+                zip_file.write(file, os.path.basename(file))
+
+        # Move the zip file to the desired location
+        destination_folder = "results"
+        shutil.move(zip_filename, os.path.join(destination_folder, zip_filename))
+
+        # Print the location of the zip file
+        print(f"Zip file created: {os.path.join(destination_folder, zip_filename)}")
     except Exception as e:
         error_msg = f"An error occurred: {str(e)}\n{traceback.format_exc()}"
         print(error_msg)

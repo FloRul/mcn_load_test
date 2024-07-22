@@ -1,13 +1,9 @@
-﻿import datetime
-from typing import Callable, List, Tuple, Dict, Any
+﻿from typing import Callable, List, Tuple, Dict, Any
 import statistics
 import asyncio
 import websockets
 import json
 import time
-from langfuse import Langfuse
-from dotenv import load_dotenv
-import os
 
 
 class Metric:
@@ -142,6 +138,13 @@ class WebSocketLoadTester:
                         "raw_response": result[1],
                     }
 
+                # Log unexpected response formats
+                if (
+                    not isinstance(response_json, dict)
+                    or "message" not in response_json
+                ):
+                    print(f"Unexpected response format: {response_json}")
+
                 # Compute metrics for this result
                 for metric in self.metrics:
                     metric.compute(prompt, response_json)
@@ -150,7 +153,7 @@ class WebSocketLoadTester:
                     prompt,
                     response_json,
                     result[2],
-                )  # Return parsed JSON or error dict
+                )
 
         tasks = [bounded_send(prompt) for prompt in prompts]
         results = await asyncio.gather(*tasks)

@@ -8,7 +8,7 @@ DNS=${1:-dkmwo6pd6rra6.cloudfront.net}
 WEBSOCKET_URL="wss://${DNS}/socket"
 ORIGIN="https://${DNS}"
 PROMPTS_FOLDER="./datasets"
-CONNECTIONS=20
+CONNECTIONS=5
 
 # Setup virtual environment
 python3 -m venv venv || { echo "Failed to create virtual environment"; exit 1; }
@@ -38,4 +38,4 @@ if [ $python_exit_code -ne 0 ]; then
 fi
 
 echo "Load test completed"
-exit 0
+read -p "Press any key to exit..."
