@@ -1,5 +1,3 @@
-﻿langfuse
-python-dotenv
-websockets
+﻿websockets
 tqdm
 matplotlib

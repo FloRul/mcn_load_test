@@ -11,23 +11,22 @@ import datetime
 from typing import List, Tuple, Dict, Any
 import zipfile
 from analytics import Analytics
-
 from core import Metric, WebSocketLoadTester
+import traceback
+import logging
+import glob
+import shutil
 
 
 def parse_arguments() -> argparse.Namespace:
     parser = argparse.ArgumentParser(
         description="WebSocket Load Tester for AWS API Gateway"
     )
-    parser.add_argument("websocket_url", help="WebSocket URL of the AWS API Gateway")
+    parser.add_argument("--ws", help="WebSocket URL of the AWS API Gateway", dest="websocket_url")
+    parser.add_argument("--o", help="Origin for the WebSocket connection",dest="origin" , default=None)
+    parser.add_argument("--out", help="Folder to save all output files", default="output", dest="output_folder")
     parser.add_argument(
-        "prompts_folder", help="Folder containing JSON files with prompts"
-    )
-    parser.add_argument(
-        "--origin", help="Origin for the WebSocket connection", default=None
-    )
-    parser.add_argument(
-        "--connections", type=int, default=10, help="Number of concurrent connections"
+        "--c", type=int, default=5, help="Number of concurrent connections", dest="connections"
     )
     args = parser.parse_args()
 
@@ -92,8 +91,9 @@ def calculate_statistics(results: List[Tuple[str, dict, float]]) -> Dict[str, An
     }
 
 
-def generate_output_filenames(script_name: str, suffix:str) -> Tuple[str, str]:
-    output_dir = "results"
+def generate_output_filenames(
+    output_dir: str, script_name: str, suffix: str
+) -> Tuple[str, str]:
     os.makedirs(output_dir, exist_ok=True)
     return (
         os.path.join(output_dir, f"{script_name}-{suffix}-output.json"),
@@ -101,21 +101,13 @@ def generate_output_filenames(script_name: str, suffix:str) -> Tuple[str, str]:
     )
 
 
-def write_results(
-    filename: str,
-    results: List[Tuple[str, str, float]],
-):
+def write_results(filename: str, results: List[Tuple[str, str, float]]):
     output = {}
 
     for prompt, response, latency in results:
-        # Create a hash of the request
         request_hash = hashlib.md5(json.dumps(prompt["Question"]).encode()).hexdigest()
-
-        # Parse the response JSON
         message = response.get("message", "").lstrip("\n")
         infered_intent = response.get("intent", "")
-
-        # Create the dictionary for this request
         result_dict = {
             "input": prompt,
             "output": {
@@ -124,11 +116,8 @@ def write_results(
             },
             "latency": latency,
         }
-
-        # Use the hash as the key in the output dictionary
         output[request_hash] = result_dict
 
-    # Write the results to a JSON file
     with open(filename, "w", encoding="utf8") as f:
         json.dump(output, f, indent=2, ensure_ascii=False)
 
@@ -165,19 +154,6 @@ def write_summary(
     with open(filename, "w", encoding="utf8") as f:
         json.dump(summary, f, indent=2)
     return summary
-
-
-import traceback
-import logging
-import glob
-import shutil
-
-# Set up logging
-logging.basicConfig(
-    filename="load_test.log",
-    level=logging.ERROR,
-    format="%(asctime)s - %(levelname)s - %(message)s",
-)
 
 
 def get_metrics() -> List[Metric]:
@@ -220,7 +196,7 @@ def get_metrics() -> List[Metric]:
 async def main():
     try:
         args = parse_arguments()
-        prompts = read_prompts(args.prompts_folder)
+        prompts = read_prompts("./datasets")
 
         load_tester = WebSocketLoadTester(
             args.websocket_url, args.origin, get_metrics()
@@ -238,36 +214,37 @@ async def main():
 
         script_name = "load_test"
         suffix = datetime.datetime.now().strftime("%Y-%m-%d_%H-%M-%S")
-        output_filename, output_summary = generate_output_filenames(script_name, suffix=suffix)
+        output_filename, output_summary = generate_output_filenames(
+            args.output_folder, script_name, suffix
+        )
 
         write_results(output_filename, results)
         summary = write_summary(output_summary, stats, total_time, load_tester.metrics)
-        analytics = Analytics("results", "results", suffix=suffix)
+        analytics = Analytics(args.output_folder, args.output_folder, suffix=suffix)
         analytics.plot_failed_responses_summary(summary)
         analytics.plot_intent_distribution(stats)
-        
-        # Gather all the files with the specified suffix
-        files = glob.glob(f"results/*{suffix}*")
 
-        # Create a zip file
+        files = glob.glob(f"{args.output_folder}/*{suffix}*")
+
         zip_filename = f"results_{suffix}.zip"
         with zipfile.ZipFile(zip_filename, "w") as zip_file:
-            # Add each file to the zip
             for file in files:
                 zip_file.write(file, os.path.basename(file))
 
-        # Move the zip file to the desired location
-        destination_folder = "results"
-        shutil.move(zip_filename, os.path.join(destination_folder, zip_filename))
+        shutil.move(zip_filename, os.path.join(args.output_folder, zip_filename))
 
-        # Print the location of the zip file
-        print(f"Zip file created: {os.path.join(destination_folder, zip_filename)}")
+        print(f"Zip file created: {os.path.join(args.output_folder, zip_filename)}")
     except Exception as e:
         error_msg = f"An error occurred: {str(e)}\n{traceback.format_exc()}"
         print(error_msg)
         logging.error(error_msg)
-        raise  # Re-raise the exception after logging
+        raise
 
 
 if __name__ == "__main__":
+    logging.basicConfig(
+        filename="load_test.log",
+        level=logging.ERROR,
+        format="%(asctime)s - %(levelname)s - %(message)s",
+    )
     asyncio.run(main())
