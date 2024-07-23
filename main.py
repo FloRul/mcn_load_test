@@ -114,7 +114,7 @@ def write_results(filename: str, results: List[Tuple[str, str, float]]):
                 "response": message,
                 "intent": infered_intent,
             },
-            "latency": latency,
+            "latency": round(latency, 2)
         }
         output[request_hash] = result_dict
 
@@ -126,12 +126,19 @@ def write_summary(
     filename: str, stats: Dict[str, Any], total_time: float, metrics: List[Metric]
 ):
     summary = {
-        "total_requests": stats["total_requests"],
-        "successful_requests": stats["successful_requests"],
-        "total_time": total_time,
-        "requests_per_second": stats["total_requests"] / total_time,
-        "latency": stats["latency"],
-        "per_intent": stats["per_intent"],
+        "total_requests": round(stats["total_requests"], 2),
+        "successful_requests": round(stats["successful_requests"], 2),
+        "total_time": round(total_time, 2),
+        "requests_per_second": round(stats["total_requests"] / total_time, 2),
+        "latency": {
+            "average": round(stats["latency"]["average"], 2),
+            "median": round(stats["latency"]["median"], 2),
+            "min": round(stats["latency"]["min"], 2),
+            "max": round(stats["latency"]["max"], 2),
+            "p95": round(stats["latency"]["p95"], 2),
+            "p99": round(stats["latency"]["p99"], 2),
+        },
+        "per_intent": {intent: round(count, 2) for intent, count in stats["per_intent"].items()},
         "metrics": {},
     }
 
@@ -140,7 +147,7 @@ def write_summary(
             metric.get_results()
         )
         summary["metrics"][metric_name] = {
-            "average": metric_average,
+            "average": round(metric_average, 2),
             "failed_responses": [
                 {
                     "prompt": failed["prompt"],

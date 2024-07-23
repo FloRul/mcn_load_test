@@ -50,13 +50,8 @@ This project provides a set of tools to perform load testing on WebSocket endpoi
    - Set up a virtual environment
    - Install dependencies from `requirements.txt`
    - Run the load test with the specified (or default) parameters
-   - Log the output to `load_test_output.log`
+   - Output the result files in the output folder
 
-3. Review the results:
-   - The script will display a summary of the test results in the console.
-   - A detailed JSON output will be saved in `results/main-YYYY-MM-DD_HH-MM-SS-output.json`.
-   - A JSON summary will be saved in `results/main-YYYY-MM-DD_HH-MM-SS-summary.json`.
-   - The full console output will be saved in `load_test_output.log`.
 
 ## Configuration
 
@@ -64,8 +59,8 @@ You can modify the following variables in the `run_load_test.sh` script to custo
 
 - `WEBSOCKET_URL`: The WebSocket URL to test (default: `wss://${DNS}/socket`)
 - `ORIGIN`: The origin for the WebSocket connection (default: `https://${DNS}`)
-- `PROMPTS_FOLDER`: The folder containing the JSONL files with prompts (default: `./datasets`)
 - `CONNECTIONS`: The number of concurrent connections (default: 20)
+- `OUTPUT_FOLDER`: The folder where the results zip file will be placed
 
 ## Understanding the Results
 
