@@ -8,4 +8,4 @@ dataset_reader/__pycache__/*
 *.log
 load_test_output.log
 load_test.log
-*/output/*
+output
