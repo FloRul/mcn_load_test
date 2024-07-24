@@ -22,11 +22,24 @@ def parse_arguments() -> argparse.Namespace:
     parser = argparse.ArgumentParser(
         description="WebSocket Load Tester for AWS API Gateway"
     )
-    parser.add_argument("--ws", help="WebSocket URL of the AWS API Gateway", dest="websocket_url")
-    parser.add_argument("--o", help="Origin for the WebSocket connection",dest="origin" , default=None)
-    parser.add_argument("--out", help="Folder to save all output files", default="output", dest="output_folder")
     parser.add_argument(
-        "--c", type=int, default=5, help="Number of concurrent connections", dest="connections"
+        "--ws", help="WebSocket URL of the AWS API Gateway", dest="websocket_url"
+    )
+    parser.add_argument(
+        "--o", help="Origin for the WebSocket connection", dest="origin", default=None
+    )
+    parser.add_argument(
+        "--out",
+        help="Folder to save all output files",
+        default="output",
+        dest="output_folder",
+    )
+    parser.add_argument(
+        "--c",
+        type=int,
+        default=5,
+        help="Number of concurrent connections",
+        dest="connections",
     )
     args = parser.parse_args()
 
@@ -53,8 +66,7 @@ def read_prompts(folder_path: str) -> list[dict]:
 
 
 def calculate_statistics(results: List[Tuple[str, dict, float]]) -> Dict[str, Any]:
-    latencies = [latency for _, _, latency in results if latency > 0]
-
+    intent_latencies = {}
     intent_count = Counter(
         [
             response.get("intent", "")
@@ -63,16 +75,14 @@ def calculate_statistics(results: List[Tuple[str, dict, float]]) -> Dict[str, An
         ]
     )
 
-    return {
-        "total_requests": len(results),
-        "per_intent": {intent: count for intent, count in intent_count.items()},
-        "successful_requests": sum(
-            1
-            for _, response, _ in results
-            if isinstance(response, dict)
-            and not response.get("message", "").startswith("Une erreur")
-        ),
-        "latency": {
+    for intent in intent_count.keys():
+        intent_results = [
+            (prompt, response, latency)
+            for prompt, response, latency in results
+            if isinstance(response, dict) and response.get("intent") == intent
+        ]
+        latencies = [latency for _, _, latency in intent_results if latency > 0]
+        intent_latencies[intent] = {
             "average": statistics.mean(latencies) if latencies else 0,
             "median": statistics.median(latencies) if latencies else 0,
             "min": min(latencies) if latencies else 0,
@@ -87,7 +97,18 @@ def calculate_statistics(results: List[Tuple[str, dict, float]]) -> Dict[str, An
                 if len(latencies) >= 100
                 else max(latencies) if latencies else 0
             ),
-        },
+        }
+
+    return {
+        "total_requests": len(results),
+        "per_intent": {intent: count for intent, count in intent_count.items()},
+        "successful_requests": sum(
+            1
+            for _, response, _ in results
+            if isinstance(response, dict)
+            and not response.get("message", "").startswith("Une erreur")
+        ),
+        "latency": intent_latencies,
     }
 
 
@@ -113,8 +134,9 @@ def write_results(filename: str, results: List[Tuple[str, str, float]]):
             "output": {
                 "response": message,
                 "intent": infered_intent,
+                "length": len(message),
             },
-            "latency": round(latency, 2)
+            "latency": round(latency, 2),
         }
         output[request_hash] = result_dict
 
@@ -126,22 +148,27 @@ def write_summary(
     filename: str, stats: Dict[str, Any], total_time: float, metrics: List[Metric]
 ):
     summary = {
-        "total_requests": round(stats["total_requests"], 2),
-        "successful_requests": round(stats["successful_requests"], 2),
+        "total_requests": stats["total_requests"],
+        "successful_requests": stats["successful_requests"],
         "total_time": round(total_time, 2),
         "requests_per_second": round(stats["total_requests"] / total_time, 2),
-        "latency": {
-            "average": round(stats["latency"]["average"], 2),
-            "median": round(stats["latency"]["median"], 2),
-            "min": round(stats["latency"]["min"], 2),
-            "max": round(stats["latency"]["max"], 2),
-            "p95": round(stats["latency"]["p95"], 2),
-            "p99": round(stats["latency"]["p99"], 2),
-        },
-        "per_intent": {intent: round(count, 2) for intent, count in stats["per_intent"].items()},
+        "per_intent": stats["per_intent"],
+        "latency": {},
         "metrics": {},
     }
 
+    # Add latency statistics for each intent
+    for intent, latency_stats in stats["latency"].items():
+        summary["latency"][intent] = {
+            "average": round(latency_stats["average"], 2),
+            "median": round(latency_stats["median"], 2),
+            "min": round(latency_stats["min"], 2),
+            "max": round(latency_stats["max"], 2),
+            "p95": round(latency_stats["p95"], 2),
+            "p99": round(latency_stats["p99"], 2),
+        }
+
+    # Add metrics
     for metric in metrics:
         metric_name, metric_average, metric_scores, failed_responses = (
             metric.get_results()
@@ -170,6 +197,12 @@ def get_metrics() -> List[Metric]:
         except KeyError:
             return 0.0
 
+    def length_check(input: dict, output: dict) -> float:
+        try:
+            return 0.0 if len(output.get("message", "")) > 1000 else 1.0
+        except KeyError:
+            return 0.0
+
     def ref_recall_count(input: dict, output: dict) -> float:
         try:
             out_ref_count = len(output["references"])
@@ -192,9 +225,14 @@ def get_metrics() -> List[Metric]:
             classification_accuracy,
             failure_condition=lambda _, __, score: score == 0.0,
         ),
+        # Metric(
+        #     "ref_recall_count",
+        #     ref_recall_count,
+        #     failure_condition=lambda _, __, score: score == 0.0,
+        # ),
         Metric(
-            "ref_recall_count",
-            ref_recall_count,
+            "length_check",
+            length_check,
             failure_condition=lambda _, __, score: score == 0.0,
         ),
     ]

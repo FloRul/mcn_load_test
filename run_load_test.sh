@@ -32,10 +32,15 @@ echo "Python script exit code: $python_exit_code"
 
 if [ $python_exit_code -ne 0 ]; then
     echo "Load test script failed with exit code $python_exit_code"
-    echo "Error details:"
-    tail -n 20 load_test_output.log
+    echo "Error details in ./load_test.log"
     exit 1
 fi
 
 echo "Load test completed"
+
+# Clean up the OUTPUT_FOLDER content, leaving only the zip files
+echo "Cleaning up output folder..."
+find "$OUTPUT_FOLDER" -type f ! -name "*.zip" -delete
+echo "Output folder cleaned up"
+
 exit 0

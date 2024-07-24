@@ -71,9 +71,7 @@ class Analytics:
             bbox=dict(facecolor="white", alpha=0.5),
         )
         plt.savefig(
-            os.path.join()(
-                self.output_folder, f"failed_responses_summary-{self.suffix}.png"
-            ),
+            os.path.join(self.output_folder, f"failed_responses_summary-{self.suffix}.png"),
             dpi=300,
         )
 

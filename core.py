@@ -118,6 +118,7 @@ class WebSocketLoadTester:
             )
             return prompt, f"Error: {str(e)}", 0
 
+
     async def run_load_test(self, prompts: List[dict], connections):
         self.total_requests = len(prompts)
         self.completed_requests = 0
