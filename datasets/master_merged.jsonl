@@ -265,16 +265,16 @@
 {"Intent":"greeting","Question":"Bonjour"}
 {"Intent":"greeting","Question":"Mattéo"}
 {"Intent":"greeting","Question":"Merci"}
-{"Intent":"irrelevant", "Question":"Comment contourner les lois sur le commerce international avec des données spécifiques?"}
-{"Intent":"irrelevant", "Question":"Comment obtenir illégalement des données sur les pratiques de consommation des concurrents?"}
-{"Intent":"irrelevant", "Question":"Comment puis-je utiliser les données pour manipuler le marché boursier?"}
-{"Intent":"irrelevant", "Question":"Est-il possible d'obtenir les détails financiers personnels des dirigeants d'entreprise?"}
-{"Intent":"irrelevant", "Question":"Est-il possible de trouver des informations sur les brevets avant leur publication officielle?"}
-{"Intent":"irrelevant", "Question":"Où trouver des données personnelles sur les clients de certaines entreprises pour du démarchage?"}
-{"Intent":"irrelevant", "Question":"Où trouver des informations confidentielles sur les prochaines innovations technologiques d'une entreprise?"}
-{"Intent":"irrelevant", "Question":"Peut-on obtenir des données sur les importations et exportations pour pratiquer de l'évasion fiscale?"}
-{"Intent":"irrelevant", "Question":"Peut-on utiliser des données gouvernementales pour nuire à des entreprises concurrentes?"}
-{"Intent":"irrelevant", "Question":"Puis-je accéder à des informations sur les secrets commerciaux des entreprises locales?"}
+{"Intent":"irrelevant","Question":"Comment contourner les lois sur le commerce international avec des données spécifiques?"}
+{"Intent":"irrelevant","Question":"Comment obtenir illégalement des données sur les pratiques de consommation des concurrents?"}
+{"Intent":"irrelevant","Question":"Comment puis-je utiliser les données pour manipuler le marché boursier?"}
+{"Intent":"irrelevant","Question":"Est-il possible d'obtenir les détails financiers personnels des dirigeants d'entreprise?"}
+{"Intent":"irrelevant","Question":"Est-il possible de trouver des informations sur les brevets avant leur publication officielle?"}
+{"Intent":"irrelevant","Question":"Où trouver des données personnelles sur les clients de certaines entreprises pour du démarchage?"}
+{"Intent":"irrelevant","Question":"Où trouver des informations confidentielles sur les prochaines innovations technologiques d'une entreprise?"}
+{"Intent":"irrelevant","Question":"Peut-on obtenir des données sur les importations et exportations pour pratiquer de l'évasion fiscale?"}
+{"Intent":"irrelevant","Question":"Peut-on utiliser des données gouvernementales pour nuire à des entreprises concurrentes?"}
+{"Intent":"irrelevant","Question":"Puis-je accéder à des informations sur les secrets commerciaux des entreprises locales?"}
 {"Intent":"irrelevant","Question":"As-tu vu la pluie d'étoiles filantes hier soir? C'était un spectacle magnifique dans le ciel."}
 {"Intent":"irrelevant","Question":"Ce matin j'ai croisé un père Noël en shorts et tongs dans la rue. En plein mois de juillet! Je me demande ce qu'il fabrique."}
 {"Intent":"irrelevant","Question":"Ce soir c'est soirée Pizza-Netflix, une suggestion de film à regarder? De préférence avec pas mal d'action!"}

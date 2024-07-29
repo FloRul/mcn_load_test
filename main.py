@@ -2,6 +2,7 @@
 from collections import Counter
 import hashlib
 import json
+import random
 import time
 import argparse
 from urllib.parse import urlparse
@@ -21,6 +22,12 @@ import shutil
 def parse_arguments() -> argparse.Namespace:
     parser = argparse.ArgumentParser(
         description="WebSocket Load Tester for AWS API Gateway"
+    )
+    parser.add_argument(
+        "--max-samples",
+        type=int,
+        default=-1,
+        help="Maximum number of samples to use",
     )
     parser.add_argument(
         "--ws", help="WebSocket URL of the AWS API Gateway", dest="websocket_url"
@@ -50,13 +57,19 @@ def parse_arguments() -> argparse.Namespace:
     return args
 
 
-def read_prompts(folder_path: str) -> list[dict]:
+def read_prompts(folder_path: str, max_samples: int = -1) -> list[dict]:
     prompts = []
     for filename in os.listdir(folder_path):
         if filename.endswith(".jsonl"):
             file_path = os.path.join(folder_path, filename)
             with open(file_path, "r", encoding="utf8") as file:
-                for line in file:
+                lines = file.readlines()
+                if max_samples == -1:
+                    sampled_lines = lines
+                else:
+                    num_samples = min(max_samples, len(lines))
+                    sampled_lines = random.sample(lines, num_samples)
+                for line in sampled_lines:
                     try:
                         prompt = json.loads(line)
                         prompts.append(prompt)
@@ -219,6 +232,12 @@ def get_metrics() -> List[Metric]:
         except KeyError:
             return 0.0
 
+    def sentence_count(input: dict, output: dict) -> float:
+        try:
+            return 1.0 if len(output.get("message", "").split(".")) > 1 else 0.0
+        except KeyError:
+            return 0.0
+
     return [
         Metric(
             "classification_accuracy",
@@ -241,7 +260,7 @@ def get_metrics() -> List[Metric]:
 async def main():
     try:
         args = parse_arguments()
-        prompts = read_prompts("./datasets")
+        prompts = read_prompts("./datasets", max_samples=args.max_samples)
 
         load_tester = WebSocketLoadTester(
             args.websocket_url, args.origin, get_metrics()

@@ -9,14 +9,6 @@ class Analytics:
         self.output_folder = output_folder
         self.suffix = suffix
 
-    def get_latest_summary(self):
-        latest_file = max(
-            (f for f in os.listdir(self.results_folder) if f.endswith("-summary.json")),
-            key=lambda f: os.path.getmtime(os.path.join("results", f)),
-        )
-        # Construct the file path
-        return os.path.join("results", latest_file)
-
     def plot_failed_responses_summary(self, data: dict):
         # Extract relevant information
         failed_responses = (
@@ -86,7 +78,7 @@ class Analytics:
         # Create the pie chart
         plt.figure(figsize=(10, 6))
         plt.pie(counts, labels=intents, autopct="%1.1f%%")
-        plt.title("Intent Distribution")
+        plt.title("Test dataset intent Distribution")
 
         # Show the plot
         plt.savefig(
