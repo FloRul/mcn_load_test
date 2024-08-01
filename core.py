@@ -91,10 +91,10 @@ class WebSocketLoadTester:
         self.total_requests = 0
         self.metrics = metrics
 
-    async def asend_message(self, prompt: dict):
+    async def asend_message(self, prompt: dict, timeout: float = 120):
         try:
             async with websockets.connect(
-                self.websocket_url, origin=self.origin
+                self.websocket_url, origin=self.origin, timeout=timeout
             ) as websocket:
                 payload = json.dumps({"message": prompt["Question"]})
                 start_time = time.time()
@@ -103,60 +103,54 @@ class WebSocketLoadTester:
                 end_time = time.time()
                 latency = end_time - start_time
                 self.completed_requests += 1
-                print(
-                    f"\rCompleted {self.completed_requests}/{self.total_requests} requests",
-                    end="",
-                    flush=True,
-                )
+
                 return prompt, response, latency
+        except asyncio.TimeoutError:
+            self.completed_requests += 1
+            return prompt, {"error": "Error: Timeout"}, 0
         except Exception as e:
             self.completed_requests += 1
             print(
-                f"\rCompleted {self.completed_requests}/{self.total_requests} requests",
+                f"\rCompleted {self.completed_requests}/{self.total_requests} requests with status: Error: {str(e)}",
                 end="",
                 flush=True,
             )
-            return prompt, f"Error: {str(e)}", 0
+            return prompt, {"error": f"Error: {str(e)}"}, 0
 
-
-    async def run_load_test(self, prompts: List[dict], connections):
+    async def run_load_test(self, prompts: List[dict], connections, queue_size: int):
+        print(f"Starting load test with {len(prompts)} prompts")
         self.total_requests = len(prompts)
         self.completed_requests = 0
-        semaphore = asyncio.Semaphore(connections)
+        semaphores = [asyncio.Semaphore(queue_size) for _ in range(connections)]
 
-        async def bounded_send(prompt: dict):
+        async def bounded_send(semaphore, prompt: dict):
             async with semaphore:
                 result = await self.asend_message(prompt)
                 try:
-                    # Attempt to parse the response as JSON
                     response_json = json.loads(result[1])
-                except json.JSONDecodeError as e:
-                    print(f"Failed to parse response as JSON: {e}")
-                    print(f"Raw response: {result[1]}")
-                    # Create a dummy response object for metrics computation
-                    response_json = {
-                        "error": "Invalid JSON response",
-                        "raw_response": result[1],
-                    }
-
-                # Log unexpected response formats
-                if (
-                    not isinstance(response_json, dict)
-                    or "message" not in response_json
-                ):
-                    print(f"Unexpected response format: {response_json}")
+                    if (
+                        not isinstance(response_json, dict)
+                        or "message" not in response_json
+                    ):
+                        raise ValueError(f"Unexpected response format: {response_json}")
+                except (json.JSONDecodeError, ValueError) as e:
+                    response_json = {"error": str(e), "message": result[1]}
 
                 # Compute metrics for this result
                 for metric in self.metrics:
+                    print(f"Computing metric: {metric.name} for prompt: {prompt}")
                     metric.compute(prompt, response_json)
 
-                return (
-                    prompt,
-                    response_json,
-                    result[2],
+                self.completed_requests += 1
+                print(
+                    f"Completed {self.completed_requests}/{self.total_requests} requests"
                 )
+                return prompt, response_json, result[2]
 
-        tasks = [bounded_send(prompt) for prompt in prompts]
+        tasks = [
+            bounded_send(semaphore, prompts[i % len(prompts)])
+            for i, semaphore in enumerate(semaphores)
+        ]
         results = await asyncio.gather(*tasks)
-        print("\n")  # New line after progress indicator
+        print(f"Completed load test with {self.total_requests} requests")
         return results

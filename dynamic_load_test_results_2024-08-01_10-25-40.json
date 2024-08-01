@@ -1,0 +1,19 @@
+{
+  "1": {
+    "connections_count": 1,
+    "avg_latency": 5.0930054664611815,
+    "max_latency": 15.338408470153809,
+    "min_latency": 0.5411396026611328,
+    "error_count": 0,
+    "error_rate": 0.0
+  },
+  "6": {
+    "connections_count": 6,
+    "avg_latency": 7.479588230450948,
+    "max_latency": 71.11791348457336,
+    "min_latency": 0.5632658004760742,
+    "error_count": 0,
+    "error_rate": 0.0
+  },
+  "endpoint": "wss://discussion.test.robco.si.gouv.qc.ca/socket"
+}

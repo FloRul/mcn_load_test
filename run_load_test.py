@@ -28,6 +28,7 @@ def parse_arguments() -> argparse.Namespace:
         type=int,
         default=-1,
         help="Maximum number of samples to use",
+        dest="max_samples",
     )
     parser.add_argument(
         "--ws", help="WebSocket URL of the AWS API Gateway", dest="websocket_url"

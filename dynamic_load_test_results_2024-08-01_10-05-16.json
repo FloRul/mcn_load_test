@@ -1,0 +1,83 @@
+{
+  "1": {
+    "connections_count": 1,
+    "avg_latency": 2.928386688232422,
+    "max_latency": 2.928386688232422,
+    "min_latency": 2.928386688232422,
+    "error_count": 0,
+    "error_rate": 0.0
+  },
+  "21": {
+    "connections_count": 21,
+    "avg_latency": 15.268854708898635,
+    "max_latency": 37.49213910102844,
+    "min_latency": 0.9123704433441162,
+    "error_count": 0,
+    "error_rate": 0.0
+  },
+  "41": {
+    "connections_count": 41,
+    "avg_latency": 17.84358932332295,
+    "max_latency": 69.05261492729187,
+    "min_latency": 0.5975501537322998,
+    "error_count": 0,
+    "error_rate": 0.0
+  },
+  "61": {
+    "connections_count": 61,
+    "avg_latency": 19.36313093685713,
+    "max_latency": 53.156004190444946,
+    "min_latency": 0.7307801246643066,
+    "error_count": 0,
+    "error_rate": 0.0
+  },
+  "81": {
+    "connections_count": 81,
+    "avg_latency": 24.02977392114239,
+    "max_latency": 76.13255739212036,
+    "min_latency": 0.5994434356689453,
+    "error_count": 0,
+    "error_rate": 0.0
+  },
+  "101": {
+    "connections_count": 101,
+    "avg_latency": 21.47314276456833,
+    "max_latency": 91.27878284454346,
+    "min_latency": 0.6292629241943359,
+    "error_count": 0,
+    "error_rate": 0.0
+  },
+  "121": {
+    "connections_count": 121,
+    "avg_latency": 15.367777680406476,
+    "max_latency": 43.31344413757324,
+    "min_latency": 0.49175286293029785,
+    "error_count": 0,
+    "error_rate": 0.0
+  },
+  "141": {
+    "connections_count": 141,
+    "avg_latency": 19.898119703631536,
+    "max_latency": 85.20929479598999,
+    "min_latency": 0.6620748043060303,
+    "error_count": 0,
+    "error_rate": 0.0
+  },
+  "161": {
+    "connections_count": 161,
+    "avg_latency": 24.544816399933,
+    "max_latency": 78.22812628746033,
+    "min_latency": 0.6882157325744629,
+    "error_count": 0,
+    "error_rate": 0.0
+  },
+  "181": {
+    "connections_count": 181,
+    "avg_latency": 23.125036947370514,
+    "max_latency": 117.85840272903442,
+    "min_latency": 0.6755795478820801,
+    "error_count": 0,
+    "error_rate": 0.0
+  },
+  "endpoint": "wss://discussion.test.robco.si.gouv.qc.ca/socket"
+}

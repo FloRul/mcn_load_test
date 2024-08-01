@@ -24,8 +24,9 @@ This project provides a set of tools to perform load testing on WebSocket endpoi
 1. Clone this repository:
    ```bash
    git clone https://github.com/FloRul/mcn_load_test.git
-   cd mcn_load_test
+   cd load_test
    ```
+3. Edit variables in run_load_test.sh file
 
 2. Ensure you have the necessary permissions to execute the bash script:
    ```bash
@@ -42,7 +43,7 @@ This project provides a set of tools to perform load testing on WebSocket endpoi
 
 2. Run the load test using the bash script:
    ```bash
-   ./run_load_test.sh [DNS]
+   source ./run_load_test.sh [DNS]
    ```
    Where `[DNS]` is an optional argument to specify the DNS to test. If not provided, it defaults to `dkmwo6pd6rra6.cloudfront.net`.
 
@@ -60,7 +61,6 @@ You can modify the following variables in the `run_load_test.sh` script to custo
 - `WEBSOCKET_URL`: The WebSocket URL to test (default: `wss://${DNS}/socket`)
 - `ORIGIN`: The origin for the WebSocket connection (default: `https://${DNS}`)
 - `CONNECTIONS`: The number of concurrent connections (default: 20)
-- `OUTPUT_FOLDER`: The folder where the results zip file will be placed
 
 ## Understanding the Results
 
