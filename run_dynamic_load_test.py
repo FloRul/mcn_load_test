@@ -52,6 +52,11 @@ def parse_arguments() -> argparse.Namespace:
         default=10,
         help="Maximum number of messages in the queue per connection",
     )
+    if parser.parse_args().step_size > parser.parse_args().max_connections:
+        parser.error(
+            f"argument --step-size: {parser.parse_args().step_size} "
+            f"must be less than or equal to --max-connections: {parser.parse_args().max_connections}"
+        )
     return parser.parse_args()
 
 
@@ -81,7 +86,8 @@ def get_metrics() -> List[Metric]:
     return []
 
 
-def plot_results(results: Dict[str, Any], output_file: str):
+def plot_results(res_dict: Dict[str, Any], output_file: str):
+    results = res_dict["results"]
     connections = list(results.keys())
     avg_latencies = [results[conn]["avg_latency"] for conn in connections]
     error_rates = [results[conn]["error_rate"] for conn in connections]
@@ -119,56 +125,44 @@ async def run_dynamic_load_test(
 ) -> Dict[str, Any]:
     load_tester = WebSocketLoadTester(args.ws, args.origin, get_metrics())
     results = {}
-    current_connections = 1
+    connection_count = args.step_size
 
-    while current_connections <= args.max_connections:
-        print(
-            f"Testing with {current_connections} concurrent connection(s) with a queue size of {args.queue_size} and a think time of {args.think_time} seconds"
+    while connection_count <= args.max_connections:
+
+        all_results = await load_tester.run_load_test(
+            prompts=cached_prompts,
+            connections=connection_count,
+            queue_size=args.queue_size,
+            think_time=args.think_time,
         )
-
-        # Create a queue of prompts for each connection
-        prompts_queues = [
-            random.sample(cached_prompts, args.queue_size)
-            for _ in range(current_connections)
-        ]
-
-        all_results = []
-
-        for _ in range(args.queue_size):
-            prompts = [queue.pop(0) for queue in prompts_queues if queue]
-
-            # Run the load test for this batch
-            step_results = await load_tester.run_load_test(prompts, current_connections, args.queue_size)
-            all_results.extend(step_results)
-
-            # Wait for think time between questions
-            await asyncio.sleep(args.think_time)
 
         # Process and store results
         latencies = [latency for _, _, latency in all_results if latency > 0]
         errors = [
             resp
             for _, resp, _ in all_results
-            if isinstance(resp, str) and "veuillez réessayer plus tard" in resp
+            if isinstance(resp, dict)
+            and "veuillez réessayer plus tard" in resp["message"]
+            or "error" in resp
         ]
 
-        results[current_connections] = {
-            "connections_count": current_connections,
+        results[connection_count] = {
+            "connections_count": connection_count,
             "avg_latency": sum(latencies) / len(latencies) if latencies else 0,
             "max_latency": max(latencies) if latencies else 0,
             "min_latency": min(latencies) if latencies else 0,
             "error_count": len(errors),
-            "error_rate": len(errors) / (current_connections * args.queue_size),
+            "error_rate": len(errors) / (connection_count * args.queue_size),
         }
 
-        print(f"Results for {current_connections} connections:")
+        print(f"Results for {connection_count} connections:")
         print(
-            f"  Average Latency: {results[current_connections]['avg_latency']:.2f} seconds"
+            f"  Average Latency: {results[connection_count]['avg_latency']:.2f} seconds"
         )
-        print(f"  Error Rate: {results[current_connections]['error_rate']:.2%}")
+        print(f"  Error Rate: {results[connection_count]['error_rate']:.2%}")
 
-        current_connections = min(
-            current_connections + args.step_size, args.max_connections + 1
+        connection_count = min(
+            connection_count + args.step_size, args.max_connections + 1
         )
 
     return results
@@ -188,23 +182,33 @@ async def main():
                 "No valid prompts found. Please check your prompts folder and files."
             )
 
-        results = await run_dynamic_load_test(args, cached_prompts)
+        res_dict = {}
+        res_dict["endpoint"] = args.ws
+        res_dict["origin"] = args.origin
+        res_dict["max_connections"] = args.max_connections
+        res_dict["step_size"] = args.step_size
+        res_dict["queue_size"] = args.queue_size
+        res_dict["think_time"] = args.think_time
 
+        results = await run_dynamic_load_test(args, cached_prompts)
+        res_dict["results"] = results
         # Generate result file name with date
         now = datetime.datetime.now()
         date_str = now.strftime("%Y-%m-%d_%H-%M-%S")
-        result_file = f"dynamic_load_test_results_{date_str}.json"
+        result_file = os.path.join(
+            args.output_folder,
+            f"dynamic_load_test_results_{date_str}.json",
+        )
 
         # Save results to file
         with open(result_file, "w") as f:
-            results["endpoint"] = args.ws
-            json.dump(results, f, indent=2)
+            json.dump(res_dict, f, indent=2)
 
         # Plot and save results
         plot_output = os.path.join(
-            args.output_folder, "dynamic_load_test_plot_{date_str}.png"
+            args.output_folder, f"dynamic_load_test_plot_{date_str}.png"
         )
-        plot_results(results, plot_output)
+        plot_results(res_dict, plot_output)
 
         print(f"Results saved to {result_file}")
 

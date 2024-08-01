@@ -1,4 +1,5 @@
-﻿from typing import Callable, List, Tuple, Dict, Any
+﻿import random
+from typing import Callable, List, Tuple, Dict, Any
 import statistics
 import asyncio
 import websockets
@@ -91,6 +92,14 @@ class WebSocketLoadTester:
         self.total_requests = 0
         self.metrics = metrics
 
+    async def asend_batch(self, prompts: List[dict], think_time: float = 0):
+        results = []
+        for prompt in prompts:
+            await asyncio.sleep(think_time)
+            response = await self.asend_message(prompt)
+            results.append(response)
+        return results
+
     async def asend_message(self, prompt: dict, timeout: float = 120):
         try:
             async with websockets.connect(
@@ -102,55 +111,32 @@ class WebSocketLoadTester:
                 response = await websocket.recv()
                 end_time = time.time()
                 latency = end_time - start_time
-                self.completed_requests += 1
-
                 return prompt, response, latency
         except asyncio.TimeoutError:
-            self.completed_requests += 1
             return prompt, {"error": "Error: Timeout"}, 0
         except Exception as e:
-            self.completed_requests += 1
-            print(
-                f"\rCompleted {self.completed_requests}/{self.total_requests} requests with status: Error: {str(e)}",
-                end="",
-                flush=True,
-            )
             return prompt, {"error": f"Error: {str(e)}"}, 0
 
-    async def run_load_test(self, prompts: List[dict], connections, queue_size: int):
-        print(f"Starting load test with {len(prompts)} prompts")
-        self.total_requests = len(prompts)
-        self.completed_requests = 0
-        semaphores = [asyncio.Semaphore(queue_size) for _ in range(connections)]
+    async def run_load_test(
+        self,
+        prompts: List[dict],
+        connections=1,
+        queue_size: int = 1,
+        think_time: float = 0,
+    ):
+        print(
+            f"Starting load test with {len(prompts)} prompts across {connections} connections with a queue size of {queue_size} and a think time of {think_time} seconds"
+        )
 
-        async def bounded_send(semaphore, prompt: dict):
-            async with semaphore:
-                result = await self.asend_message(prompt)
-                try:
-                    response_json = json.loads(result[1])
-                    if (
-                        not isinstance(response_json, dict)
-                        or "message" not in response_json
-                    ):
-                        raise ValueError(f"Unexpected response format: {response_json}")
-                except (json.JSONDecodeError, ValueError) as e:
-                    response_json = {"error": str(e), "message": result[1]}
+        tasks = []
 
-                # Compute metrics for this result
-                for metric in self.metrics:
-                    print(f"Computing metric: {metric.name} for prompt: {prompt}")
-                    metric.compute(prompt, response_json)
+        for _ in range(connections):
+            connection_prompts = [random.choice(prompts) for _ in range(queue_size)]
+            tasks.append(self.asend_batch(connection_prompts, think_time))
 
-                self.completed_requests += 1
-                print(
-                    f"Completed {self.completed_requests}/{self.total_requests} requests"
-                )
-                return prompt, response_json, result[2]
-
-        tasks = [
-            bounded_send(semaphore, prompts[i % len(prompts)])
-            for i, semaphore in enumerate(semaphores)
-        ]
         results = await asyncio.gather(*tasks)
-        print(f"Completed load test with {self.total_requests} requests")
-        return results
+        print(
+            f"Completed load test with {len(prompts)} prompts across {connections} connections with a queue size of {queue_size} and a think time of {think_time} seconds"
+        )
+        flattened_results = [item for sublist in results for item in sublist]
+        return flattened_results
