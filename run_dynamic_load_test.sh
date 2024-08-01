@@ -8,12 +8,12 @@ DNS=${1:-discussion.test.robco.si.gouv.qc.ca}
 WEBSOCKET_URL="wss://${DNS}/socket"
 ORIGIN="https://${DNS}"
 OUTPUT_FOLDER="./output"
-MAX_CONNECTIONS=10
+MAX_CONNECTIONS=500
 STEP_SIZE=5
 THINK_TIME=2
 MAX_SAMPLES=-1
 PROMPTS_FOLDER="./datasets"
-QUEUE_SIZE=2
+QUEUE_SIZE=10
 
 # Setup virtual environment
 python3 -m venv venv || { echo "Failed to create virtual environment";  }
@@ -41,6 +41,7 @@ python run_dynamic_load_test.py \
     --output "$OUTPUT_FOLDER" \
     --prompts-folder "$PROMPTS_FOLDER" \
     --max-samples "$MAX_SAMPLES" \
+    --queue-size "$QUEUE_SIZE" \
     2>&1 | tee dynamic_load_test_output.log
 
 python_exit_code=${PIPESTATUS[0]}

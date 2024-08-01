@@ -2,6 +2,7 @@
 from typing import Callable, List, Tuple, Dict, Any
 import statistics
 import asyncio
+from tqdm import tqdm
 import websockets
 import json
 import time
@@ -85,22 +86,24 @@ class Metric:
 
 class WebSocketLoadTester:
 
-    def __init__(self, websocket_url, origin, metrics: List[Metric] = []):
+    def __init__(self, websocket_url: str, origin: str, metrics: List = []):
         self.websocket_url = websocket_url
         self.origin = origin
         self.completed_requests = 0
         self.total_requests = 0
         self.metrics = metrics
 
-    async def asend_batch(self, prompts: List[dict], think_time: float = 0):
+    async def asend_batch(self, prompts: List[Dict], think_time: float = 0, pbar=None):
         results = []
         for prompt in prompts:
             await asyncio.sleep(think_time)
             response = await self.asend_message(prompt)
             results.append(response)
+            if pbar:
+                pbar.update(1)  # Update progress bar for each message processed
         return results
 
-    async def asend_message(self, prompt: dict, timeout: float = 120):
+    async def asend_message(self, prompt: Dict, timeout: float = 120):
         try:
             async with websockets.connect(
                 self.websocket_url, origin=self.origin, timeout=timeout
@@ -119,8 +122,8 @@ class WebSocketLoadTester:
 
     async def run_load_test(
         self,
-        prompts: List[dict],
-        connections=1,
+        prompts: List[Dict],
+        connections: int = 1,
         queue_size: int = 1,
         think_time: float = 0,
     ):
@@ -129,14 +132,18 @@ class WebSocketLoadTester:
         )
 
         tasks = []
+        total_messages = connections * queue_size
 
-        for _ in range(connections):
-            connection_prompts = [random.choice(prompts) for _ in range(queue_size)]
-            tasks.append(self.asend_batch(connection_prompts, think_time))
+        with tqdm(total=total_messages) as pbar:
+            for _ in range(connections):
+                connection_prompts = [random.choice(prompts) for _ in range(queue_size)]
+                tasks.append(self.asend_batch(connection_prompts, think_time, pbar))
 
-        results = await asyncio.gather(*tasks)
+            results = await asyncio.gather(*tasks)
+
         print(
             f"Completed load test with {len(prompts)} prompts across {connections} connections with a queue size of {queue_size} and a think time of {think_time} seconds"
         )
+
         flattened_results = [item for sublist in results for item in sublist]
         return flattened_results
