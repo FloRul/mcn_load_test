@@ -90,29 +90,39 @@ def plot_results(res_dict: Dict[str, Any], output_file: str):
     results = res_dict["results"]
     connections = list(results.keys())
     avg_latencies = [results[conn]["avg_latency"] for conn in connections]
-    error_rates = [results[conn]["error_rate"] for conn in connections]
+    general_error_rates = [results[conn]["general_error_rate"] for conn in connections]
+    client_error_rates = [results[conn]["client_error_rate"] for conn in connections]
 
     fig, ax1 = plt.subplots(figsize=(10, 6))
 
     # Plot average latency
     color = "tab:blue"
-    ax1.set_xlabel("Number of Connections")
-    ax1.set_ylabel("Average Latency (s)", color=color)
+    ax1.set_xlabel("Number of connections")
+    ax1.set_ylabel("Average latency (s)", color=color)
     ax1.plot(connections, avg_latencies, color=color, marker="o")
     ax1.tick_params(axis="y", labelcolor=color)
 
     # Create a second y-axis for error rate
     ax2 = ax1.twinx()
-    color = "tab:red"
-    ax2.set_ylabel("Error Rate", color=color)
-    ax2.plot(connections, error_rates, color=color, marker="s")
+    color = "tab:orange"
+    ax2.set_ylabel("General error rate", color=color)
+    ax2.plot(connections, general_error_rates, color=color, marker="s")
     ax2.tick_params(axis="y", labelcolor=color)
 
-    # Set y-axis for error rate to percentage
-    ax2.set_ylim(0, 1)
-    ax2.yaxis.set_major_formatter(plt.FuncFormatter(lambda y, _: "{:.0%}".format(y)))
+    # Create a third y-axis for error rate
+    ax3 = ax1.twinx()
+    color = "tab:red"
+    ax3.set_ylabel("Client error rate", color=color)
+    ax3.plot(connections, client_error_rates, color=color, marker="s")
+    ax3.tick_params(axis="y", labelcolor=color)
 
-    plt.title("Average Latency and Error Rate vs Number of Connections")
+    # Set y-axis for error rates to percentage
+    ax2.set_ylim(0, 1)
+    ax3.set_ylim(0, 1)
+    ax2.yaxis.set_major_formatter(plt.FuncFormatter(lambda y, _: "{:.0%}".format(y)))
+    ax3.yaxis.set_major_formatter(plt.FuncFormatter(lambda y, _: "{:.0%}".format(y)))
+
+    plt.title("Average latency and error rates vs Number of connections")
     fig.tight_layout()
     plt.savefig(output_file)
     plt.close()
@@ -138,12 +148,16 @@ async def run_dynamic_load_test(
 
         # Process and store results
         latencies = [latency for _, _, latency in all_results if latency > 0]
-        errors = [
+        general_errors = [
+            resp
+            for _, resp, _ in all_results
+            if isinstance(resp, dict) and "erreur est survenue" in resp["message"]
+        ]
+        client_errors = [
             resp
             for _, resp, _ in all_results
             if isinstance(resp, dict)
-            and "veuillez réessayer plus tard" in resp["message"]
-            or "error" in resp
+            and "Nous rencontrons un trafic intense" in resp["message"]
         ]
 
         results[connection_count] = {
@@ -151,8 +165,15 @@ async def run_dynamic_load_test(
             "avg_latency": sum(latencies) / len(latencies) if latencies else 0,
             "max_latency": max(latencies) if latencies else 0,
             "min_latency": min(latencies) if latencies else 0,
-            "error_count": len(errors),
-            "error_rate": len(errors) / (connection_count * args.queue_size),
+            "general_error_count": len(general_errors),
+            "general_error_rate": len(general_errors)
+            / (connection_count * args.queue_size),
+            "client_error_count": len(client_errors),
+            "client_error_rate": len(client_errors)
+            / (connection_count * args.queue_size),
+            "total_error_count": len(general_errors) + len(client_errors),
+            "total_error_rate": (len(general_errors) + len(client_errors))
+            / (connection_count * args.queue_size),
         }
 
         print(f"Results for {connection_count} connections:")

@@ -3,17 +3,18 @@ set -e  # Exit immediately if a command exits with a non-zero status
 
 # On peut passer un argument pour passer l'URL a tester
 DNS=${1:-discussion.test.robco.si.gouv.qc.ca}
+DNS2=${2:-dkmwo6pd6rra6.cloudfront.net}
 
 # Configuration
 WEBSOCKET_URL="wss://${DNS}/socket"
 ORIGIN="https://${DNS}"
 OUTPUT_FOLDER="./output"
-MAX_CONNECTIONS=500
-STEP_SIZE=5
-THINK_TIME=2
+MAX_CONNECTIONS=100
+STEP_SIZE=10
+THINK_TIME=5
 MAX_SAMPLES=-1
 PROMPTS_FOLDER="./datasets"
-QUEUE_SIZE=10
+QUEUE_SIZE=15
 
 # Setup virtual environment
 python3 -m venv venv || { echo "Failed to create virtual environment";  }

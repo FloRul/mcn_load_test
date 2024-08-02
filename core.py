@@ -53,7 +53,7 @@ class Metric:
                 self.failed_responses.append(
                     {
                         "prompt": prompt,
-                        "response": response,
+                        "response": str(response),
                         "reason": f"Failed condition check - {self.name}",
                     }
                 )
@@ -61,7 +61,7 @@ class Metric:
         except Exception as e:
             print(f"Error: {self.name} could not compute score due to an error.")
             self.failed_responses.append(
-                {"prompt": prompt, "response": response, "error": str(e)}
+                {"prompt": prompt, "response": str(response), "error": str(e)}
             )
             return 0.0
 
@@ -114,7 +114,7 @@ class WebSocketLoadTester:
                 response = await websocket.recv()
                 end_time = time.time()
                 latency = end_time - start_time
-                return prompt, response, latency
+                return prompt, json.loads(response), latency
         except asyncio.TimeoutError:
             return prompt, {"error": "Error: Timeout"}, 0
         except Exception as e:
