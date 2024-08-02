@@ -162,18 +162,25 @@ async def run_dynamic_load_test(
 
         results[connection_count] = {
             "connections_count": connection_count,
-            "avg_latency": sum(latencies) / len(latencies) if latencies else 0,
-            "max_latency": max(latencies) if latencies else 0,
-            "min_latency": min(latencies) if latencies else 0,
+            "avg_latency": (
+                round(sum(latencies) / len(latencies), 2) if latencies else 0
+            ),
+            "max_latency": round(max(latencies), 2) if latencies else 0,
+            "min_latency": round(min(latencies), 2) if latencies else 0,
             "general_error_count": len(general_errors),
-            "general_error_rate": len(general_errors)
-            / (connection_count * args.queue_size),
+            "general_error_rate": round(
+                len(general_errors) / (connection_count * args.queue_size), 2
+            ),
             "client_error_count": len(client_errors),
-            "client_error_rate": len(client_errors)
-            / (connection_count * args.queue_size),
+            "client_error_rate": round(
+                len(client_errors) / (connection_count * args.queue_size), 2
+            ),
             "total_error_count": len(general_errors) + len(client_errors),
-            "total_error_rate": (len(general_errors) + len(client_errors))
-            / (connection_count * args.queue_size),
+            "total_error_rate": round(
+                (len(general_errors) + len(client_errors))
+                / (connection_count * args.queue_size),
+                2,
+            ),
         }
 
         print(f"Results for {connection_count} connections:")
