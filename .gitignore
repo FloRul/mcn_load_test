@@ -10,3 +10,4 @@ load_test.log
 output
 .*
 !/.gitignore
+*.log
