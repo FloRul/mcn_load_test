@@ -5,7 +5,6 @@ results
 __pycache__/
 dataset_reader/__pycache__/*
 .env
-*.log
 load_test_output.log
 load_test.log
 output

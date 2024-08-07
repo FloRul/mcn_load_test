@@ -1,0 +1,3 @@
+Starting quality test with 849 prompts and up to 20 concurrent connections
+Starting tests with 849 prompts across 20 connections with a spread and a think time of 0.5 seconds
+  0%|          | 0/849 [00:00<?, ?it/s]  0%|          | 1/849 [00:10<2:28:20, 10.50s/it]  0%|          | 2/849 [00:10<1:02:23,  4.42s/it]  0%|          | 4/849 [00:10<24:34,  1.75s/it]    1%|          | 7/849 [00:11<10:49,  1.30it/s]

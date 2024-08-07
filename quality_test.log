@@ -1,0 +1,84 @@
+2024-08-07 12:15:36,931 - ERROR - An error occurred: [Errno 32] Broken pipe
+Traceback (most recent call last):
+  File "/usr/lib/python3.10/asyncio/runners.py", line 44, in run
+    return loop.run_until_complete(main)
+  File "/usr/lib/python3.10/asyncio/base_events.py", line 636, in run_until_complete
+    self.run_forever()
+  File "/usr/lib/python3.10/asyncio/base_events.py", line 603, in run_forever
+    self._run_once()
+  File "/usr/lib/python3.10/asyncio/base_events.py", line 1871, in _run_once
+    event_list = self._selector.select(timeout)
+  File "/usr/lib/python3.10/selectors.py", line 469, in select
+    fd_event_list = self._selector.poll(timeout, max_ev)
+KeyboardInterrupt
+
+During handling of the above exception, another exception occurred:
+
+Traceback (most recent call last):
+  File "/mnt/c/Users/FloRul4000D/Documents/GitHub/eval_mcn_v2/load_test/core.py", line 174, in run
+    results = await asyncio.gather(*tasks, return_exceptions=True)
+asyncio.exceptions.CancelledError
+
+During handling of the above exception, another exception occurred:
+
+Traceback (most recent call last):
+  File "/mnt/c/Users/FloRul4000D/Documents/GitHub/eval_mcn_v2/load_test/run_quality_test.py", line 272, in main
+    results = await tester.run(
+  File "/mnt/c/Users/FloRul4000D/Documents/GitHub/eval_mcn_v2/load_test/core.py", line 160, in run
+    with tqdm(total=total_messages) as pbar:
+  File "/mnt/c/Users/FloRul4000D/Documents/GitHub/eval_mcn_v2/load_test/venv/lib/python3.10/site-packages/tqdm/std.py", line 1140, in __exit__
+    self.close()
+  File "/mnt/c/Users/FloRul4000D/Documents/GitHub/eval_mcn_v2/load_test/venv/lib/python3.10/site-packages/tqdm/std.py", line 1302, in close
+    self.display(pos=0)
+  File "/mnt/c/Users/FloRul4000D/Documents/GitHub/eval_mcn_v2/load_test/venv/lib/python3.10/site-packages/tqdm/std.py", line 1495, in display
+    self.sp(self.__str__() if msg is None else msg)
+  File "/mnt/c/Users/FloRul4000D/Documents/GitHub/eval_mcn_v2/load_test/venv/lib/python3.10/site-packages/tqdm/std.py", line 459, in print_status
+    fp_write('\r' + s + (' ' * max(last_len[0] - len_s, 0)))
+  File "/mnt/c/Users/FloRul4000D/Documents/GitHub/eval_mcn_v2/load_test/venv/lib/python3.10/site-packages/tqdm/std.py", line 452, in fp_write
+    fp.write(str(s))
+  File "/mnt/c/Users/FloRul4000D/Documents/GitHub/eval_mcn_v2/load_test/venv/lib/python3.10/site-packages/tqdm/utils.py", line 196, in inner
+    return func(*args, **kwargs)
+BrokenPipeError: [Errno 32] Broken pipe
+
+2024-08-07 12:15:36,932 - ERROR - unhandled exception during asyncio.run() shutdown
+task: <Task finished name='Task-1' coro=<main() done, defined at /mnt/c/Users/FloRul4000D/Documents/GitHub/eval_mcn_v2/load_test/run_quality_test.py:261> exception=BrokenPipeError(32, 'Broken pipe')>
+Traceback (most recent call last):
+  File "/usr/lib/python3.10/asyncio/runners.py", line 44, in run
+    return loop.run_until_complete(main)
+  File "/usr/lib/python3.10/asyncio/base_events.py", line 636, in run_until_complete
+    self.run_forever()
+  File "/usr/lib/python3.10/asyncio/base_events.py", line 603, in run_forever
+    self._run_once()
+  File "/usr/lib/python3.10/asyncio/base_events.py", line 1871, in _run_once
+    event_list = self._selector.select(timeout)
+  File "/usr/lib/python3.10/selectors.py", line 469, in select
+    fd_event_list = self._selector.poll(timeout, max_ev)
+KeyboardInterrupt
+
+During handling of the above exception, another exception occurred:
+
+Traceback (most recent call last):
+  File "/mnt/c/Users/FloRul4000D/Documents/GitHub/eval_mcn_v2/load_test/core.py", line 174, in run
+    results = await asyncio.gather(*tasks, return_exceptions=True)
+asyncio.exceptions.CancelledError
+
+During handling of the above exception, another exception occurred:
+
+Traceback (most recent call last):
+  File "/mnt/c/Users/FloRul4000D/Documents/GitHub/eval_mcn_v2/load_test/run_quality_test.py", line 272, in main
+    results = await tester.run(
+  File "/mnt/c/Users/FloRul4000D/Documents/GitHub/eval_mcn_v2/load_test/core.py", line 160, in run
+    with tqdm(total=total_messages) as pbar:
+  File "/mnt/c/Users/FloRul4000D/Documents/GitHub/eval_mcn_v2/load_test/venv/lib/python3.10/site-packages/tqdm/std.py", line 1140, in __exit__
+    self.close()
+  File "/mnt/c/Users/FloRul4000D/Documents/GitHub/eval_mcn_v2/load_test/venv/lib/python3.10/site-packages/tqdm/std.py", line 1302, in close
+    self.display(pos=0)
+  File "/mnt/c/Users/FloRul4000D/Documents/GitHub/eval_mcn_v2/load_test/venv/lib/python3.10/site-packages/tqdm/std.py", line 1495, in display
+    self.sp(self.__str__() if msg is None else msg)
+  File "/mnt/c/Users/FloRul4000D/Documents/GitHub/eval_mcn_v2/load_test/venv/lib/python3.10/site-packages/tqdm/std.py", line 459, in print_status
+    fp_write('\r' + s + (' ' * max(last_len[0] - len_s, 0)))
+  File "/mnt/c/Users/FloRul4000D/Documents/GitHub/eval_mcn_v2/load_test/venv/lib/python3.10/site-packages/tqdm/std.py", line 452, in fp_write
+    fp.write(str(s))
+  File "/mnt/c/Users/FloRul4000D/Documents/GitHub/eval_mcn_v2/load_test/venv/lib/python3.10/site-packages/tqdm/utils.py", line 196, in inner
+    return func(*args, **kwargs)
+BrokenPipeError: [Errno 32] Broken pipe
