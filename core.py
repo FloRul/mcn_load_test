@@ -106,18 +106,20 @@ class WebSocketLoadTester:
     async def asend_message(self, prompt: Dict, timeout: float = 120):
         try:
             async with websockets.connect(
-                self.websocket_url, origin=self.origin, timeout=timeout
+                self.websocket_url, origin=self.origin, close_timeout=timeout
             ) as websocket:
                 payload = json.dumps({"message": prompt["Question"]})
                 start_time = time.time()
-                await websocket.send(payload)
-                response = await websocket.recv()
+                await asyncio.wait_for(websocket.send(payload), timeout=timeout)
+                response = await asyncio.wait_for(websocket.recv(), timeout=timeout)
                 end_time = time.time()
                 latency = end_time - start_time
                 return prompt, json.loads(response), latency
         except asyncio.TimeoutError:
+            print(f"Timeout occurred for prompt: {prompt}")
             return prompt, {"error": "Error: Timeout"}, 0
         except Exception as e:
+            print(f"Error occurred for prompt: {prompt}. Error: {str(e)}")
             return prompt, {"error": f"Error: {str(e)}"}, 0
 
     async def run_load_test(
@@ -139,11 +141,13 @@ class WebSocketLoadTester:
                 connection_prompts = [random.choice(prompts) for _ in range(queue_size)]
                 tasks.append(self.asend_batch(connection_prompts, think_time, pbar))
 
-            results = await asyncio.gather(*tasks)
+            results = await asyncio.gather(*tasks, return_exceptions=True)
 
         print(
             f"Completed load test with {len(prompts)} prompts across {connections} connections with a queue size of {queue_size} and a think time of {think_time} seconds"
         )
 
-        flattened_results = [item for sublist in results for item in sublist]
+        flattened_results = [
+            item for sublist in results if isinstance(sublist, list) for item in sublist
+        ]
         return flattened_results
