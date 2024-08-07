@@ -1,88 +1,83 @@
-﻿# WebSocket Load Tester for AWS API Gateway
+﻿Certainly! Here's the markdown documentation for the provided code:
 
-This project provides a set of tools to perform load testing on WebSocket endpoints, specifically designed for AWS API Gateway. It includes Python scripts for executing the load test and a bash script for setting up the environment and running the test.
+# WebSocket Load Tester for Chatbot Response Testing
 
-## Features
+This solution is designed to test the response of a chatbot using WebSocket connections. It includes a Python-based load tester and a shell script to set up and run the test.
 
-- Concurrent WebSocket connections
-- Customizable number of connections and prompts
-- Progress tracking during test execution
-- Detailed latency statistics (average, median, min, max, 95th and 99th percentiles)
-- JSON output for both detailed results and summary
-- Customizable metrics for evaluating responses
-- Error logging
-- Automated setup and execution via bash script
+## Table of Contents
 
-## Requirements
+1. [Overview](#overview)
+2. [Components](#components)
+3. [Setup](#setup)
+4. [Usage](#usage)
+5. [Configuration](#configuration)
+6. [Output](#output)
+7. [Analytics](#analytics)
 
-- Python 3.9+
-- Bash shell (for running the setup script)
-- Dependencies listed in `requirements.txt`
+## Overview
 
-## Installation and Setup
+The WebSocket Load Tester is a tool for evaluating the performance and accuracy of a chatbot by simulating multiple concurrent connections and analyzing the responses. It uses WebSocket connections to communicate with the chatbot, sends predefined prompts, and collects various metrics on the responses.
 
-1. Clone this repository:
-   ```bash
-   git clone https://github.com/FloRul/mcn_load_test.git
-   cd load_test
-   ```
-3. Edit variables in run_load_test.sh file
+## Components
 
-2. Ensure you have the necessary permissions to execute the bash script:
-   ```bash
-   chmod +x run_load_test.sh
-   ```
+The solution consists of the following main components:
+
+1. `run_load_test.py`: The main Python script that performs the load testing.
+2. `core.py`: Contains the `WebSocketLoadTester` and `Metric` classes for managing the load test and computing metrics.
+3. `analytics.py`: Provides functionality for generating visual analytics of the test results.
+4. `run_load_test.sh`: A shell script for setting up the environment and running the load test.
+
+## Setup
+
+To set up the environment and run the load test, follow these steps:
+
+1. Ensure you have Python 3 installed on your system.
+2. Place your test prompts in JSON Line (`.jsonl`) format in the `./datasets` directory.
+3. Make sure you have the required Python packages listed in `requirements.txt`.
 
 ## Usage
 
-1. Prepare your test prompts:
-   Create a folder named `datasets` in the project root, containing JSONL files with prompts in the following format:
-   ```json
-   {"Intent": "dqgeneral", "Question": "Je cherche des donnees...", "RefCount": "2"}
-   ```
+To run the load test, execute the `run_load_test.sh` script:
 
-2. Run the load test using the bash script:
-   ```bash
-   source ./run_load_test.sh [DNS]
-   ```
-   Where `[DNS]` is an optional argument to specify the DNS to test. If not provided, it defaults to `dkmwo6pd6rra6.cloudfront.net`.
+```bash
+./run_load_test.sh [DNS1] [DNS2]
+```
 
-   The script will:
-   - Set up a virtual environment
-   - Install dependencies from `requirements.txt`
-   - Run the load test with the specified (or default) parameters
-   - Output the result files in the output folder
+- `DNS1` (optional): The primary DNS for the chatbot (default: discussion.test.robco.si.gouv.qc.ca)
+- `DNS2` (optional): The secondary DNS for the chatbot (default: dkmwo6pd6rra6.cloudfront.net)
 
+The script will:
+1. Create and activate a virtual environment
+2. Install the required dependencies
+3. Run the load test
+4. Clean up the output folder, keeping only the zip files with results
 
 ## Configuration
 
-You can modify the following variables in the `run_load_test.sh` script to customize the test:
+The load test can be configured using the following parameters in the `run_load_test.sh` script:
 
-- `WEBSOCKET_URL`: The WebSocket URL to test (default: `wss://${DNS}/socket`)
-- `ORIGIN`: The origin for the WebSocket connection (default: `https://${DNS}`)
-- `CONNECTIONS`: The number of concurrent connections (default: 20)
+- `WEBSOCKET_URL`: The WebSocket URL for connecting to the chatbot
+- `ORIGIN`: The origin for the WebSocket connection
+- `OUTPUT_FOLDER`: The folder to save output files
+- `CONNECTIONS`: The number of concurrent connections to simulate
+- `MAX_SAMPLES`: The maximum number of samples to use (-1 for all samples)
 
-## Understanding the Results
+## Output
 
-The load test provides the following metrics:
+The load test generates the following outputs:
 
-- Total Requests: The total number of WebSocket messages sent
-- Successful Requests: The number of messages that received a response without errors
-- Total Time: The duration of the entire test
-- Requests per second: The average number of requests processed per second
-- Latency statistics: Average, median, min, max, 95th percentile, and 99th percentile latencies
-- Custom metrics: Results of user-defined metrics for evaluating responses
+1. JSON files with detailed results
+2. A summary JSON file with aggregated statistics
+3. PNG files with visualizations of the results
+4. A zip file containing all the output files
 
-## Customizing the Metrics
+## Analytics
 
-To add or modify metrics, edit the `get_metrics()` function in `main.py`. See the "Customizing the Metrics" section in the code comments for detailed instructions.
+The `Analytics` class in `analytics.py` provides two main visualizations:
 
-## Error Handling and Logging
+1. `plot_failed_responses_summary`: Creates a bar plot showing the distribution of misclassified intents.
+2. `plot_intent_distribution`: Generates a pie chart displaying the distribution of intents in the test dataset.
 
-- The Python script logs errors to `load_test.log`.
-- The bash script logs all output to `load_test_output.log`.
-- If the Python script fails, the bash script will display the last 20 lines of the log for quick debugging.
+These visualizations are automatically generated and saved as PNG files in the output folder.
 
-## Contributing
-
-Contributions are welcome! Please feel free to submit a Pull Request.
+---

@@ -271,7 +271,12 @@ async def main():
             f"Starting load test with {len(prompts)} prompts and up to {args.connections} concurrent connections"
         )
         start_time = time.time()
-        results = await load_tester.run_load_test(prompts, args.connections)
+        results = await load_tester.run_load_test(
+            prompts=prompts,
+            connections=args.connections,
+            queue_size=-1,
+            think_time=0.5,
+        )
         end_time = time.time()
 
         total_time = end_time - start_time

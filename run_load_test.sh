@@ -2,13 +2,13 @@
 set -e  # Exit immediately if a command exits with a non-zero status
 
 # On peut passer un argument pour passer l'URL a tester
-DNS=${1:-dkmwo6pd6rra6.cloudfront.net}
-
+DNS=${1:-discussion.test.robco.si.gouv.qc.ca}
+DNS2=${2:-dkmwo6pd6rra6.cloudfront.net}
 # Configuration
-WEBSOCKET_URL="wss://${DNS}/socket"
-ORIGIN="https://${DNS}"
+WEBSOCKET_URL="wss://${DNS2}/socket"
+ORIGIN="https://${DNS2}"
 OUTPUT_FOLDER="./output"
-CONNECTIONS=10
+CONNECTIONS=20
 MAX_SAMPLES=-1
 
 # Setup virtual environment

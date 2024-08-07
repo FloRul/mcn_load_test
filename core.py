@@ -34,7 +34,11 @@ class Metric:
         self.scores: List[float] = []
         self.failed_responses: List[Dict[str, Any]] = []
 
-    def compute(self, prompt: dict, response: dict) -> float:
+    def compute(
+        self,
+        prompt: dict,
+        response: dict,
+    ) -> float:
         """
         Computes the score for a given prompt and response.
 
@@ -59,7 +63,9 @@ class Metric:
                 )
             return score
         except Exception as e:
-            print(f"Error: {self.name} could not compute score due to an error.")
+            print(
+                f"Error: {self.name} could not compute score due to an error : {str(e)}"
+            )
             self.failed_responses.append(
                 {"prompt": prompt, "response": str(response), "error": str(e)}
             )
@@ -86,11 +92,14 @@ class Metric:
 
 class WebSocketLoadTester:
 
-    def __init__(self, websocket_url: str, origin: str, metrics: List = []):
+    def __init__(
+        self,
+        websocket_url: str,
+        origin: str,
+        metrics: List = [],
+    ):
         self.websocket_url = websocket_url
         self.origin = origin
-        self.completed_requests = 0
-        self.total_requests = 0
         self.metrics = metrics
 
     async def asend_batch(self, prompts: List[Dict], think_time: float = 0, pbar=None):
@@ -114,7 +123,10 @@ class WebSocketLoadTester:
                 response = await asyncio.wait_for(websocket.recv(), timeout=timeout)
                 end_time = time.time()
                 latency = end_time - start_time
-                return prompt, json.loads(response), latency
+                response = json.loads(response)
+                for metric in self.metrics:
+                    metric.compute(prompt, response)
+                return prompt, response, latency
         except asyncio.TimeoutError:
             print(f"Timeout occurred for prompt: {prompt}")
             return prompt, {"error": "Error: Timeout"}, 0
@@ -129,22 +141,42 @@ class WebSocketLoadTester:
         queue_size: int = 1,
         think_time: float = 0,
     ):
+        if queue_size == -1:
+            # Spread prompts across connections
+            prompts_per_connection = len(prompts) // connections
+            remainder = len(prompts) % connections
+            total_messages = len(prompts)
+        else:
+            total_messages = connections * queue_size
+
         print(
-            f"Starting load test with {len(prompts)} prompts across {connections} connections with a queue size of {queue_size} and a think time of {think_time} seconds"
+            f"Starting load test with {len(prompts)} prompts across {connections} connections "
+            f"with a {'spread' if queue_size == -1 else f'queue size of {queue_size}'} "
+            f"and a think time of {think_time} seconds"
         )
 
         tasks = []
-        total_messages = connections * queue_size
 
         with tqdm(total=total_messages) as pbar:
-            for _ in range(connections):
-                connection_prompts = [random.choice(prompts) for _ in range(queue_size)]
+            for i in range(connections):
+                if queue_size == -1:
+                    # Distribute prompts evenly, accounting for remainder
+                    start = i * prompts_per_connection + min(i, remainder)
+                    end = start + prompts_per_connection + (1 if i < remainder else 0)
+                    connection_prompts = prompts[start:end]
+                else:
+                    connection_prompts = [
+                        random.choice(prompts) for _ in range(queue_size)
+                    ]
+
                 tasks.append(self.asend_batch(connection_prompts, think_time, pbar))
 
             results = await asyncio.gather(*tasks, return_exceptions=True)
 
         print(
-            f"Completed load test with {len(prompts)} prompts across {connections} connections with a queue size of {queue_size} and a think time of {think_time} seconds"
+            f"Completed load test with {len(prompts)} prompts across {connections} connections "
+            f"with a {'spread' if queue_size == -1 else f'queue size of {queue_size}'} "
+            f"and a think time of {think_time} seconds"
         )
 
         flattened_results = [
