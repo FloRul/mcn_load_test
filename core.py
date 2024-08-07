@@ -11,7 +11,6 @@ import time
 class Metric:
     """
     Represents a metric used to compute scores for prompts and responses.
-
     Attributes:
         name (str): The name of the metric.
         function (Callable[[dict, dict], float]): The function used to compute the score.
