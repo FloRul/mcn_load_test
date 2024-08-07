@@ -9,3 +9,5 @@ dataset_reader/__pycache__/*
 load_test_output.log
 load_test.log
 output
+.*
+!/.gitignore
