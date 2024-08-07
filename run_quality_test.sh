@@ -26,14 +26,14 @@ fi
 
 # Run the load test
 echo "Running load test..."
-python run_load_test.py --w "$WEBSOCKET_URL" --max-samples "$MAX_SAMPLES" --o "$ORIGIN" --c "$CONNECTIONS" --out "$OUTPUT_FOLDER" 2>&1 | tee load_test_output.log
+python run_quality_test.py --w "$WEBSOCKET_URL" --max-samples "$MAX_SAMPLES" --o "$ORIGIN" --c "$CONNECTIONS" --out "$OUTPUT_FOLDER" 2>&1 | tee quality_test_output.log
 python_exit_code=${PIPESTATUS[0]}
 
 echo "Python script exit code: $python_exit_code"
 
 if [ $python_exit_code -ne 0 ]; then
     echo "Load test script failed with exit code $python_exit_code"
-    echo "Error details in ./load_test.log"
+    echo "Error details in ./quality_test.log"
     exit 1
 fi
 

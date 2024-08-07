@@ -8,7 +8,7 @@ import os
 from langfuse.client import DatasetItemClient
 from tqdm.asyncio import tqdm_asyncio
 
-from core import WebSocketLoadTester
+from core import WebSocketTester
 
 load_dotenv()
 langfuse = Langfuse(
@@ -67,7 +67,7 @@ def generate_small_hash(length=8):
 
 
 async def main(max_parallel_tasks: int = 5):
-    ws_tester = WebSocketLoadTester(
+    ws_tester = WebSocketTester(
         websocket_url=os.environ.get("WEBSOCKET_URL"), origin=os.environ.get("ORIGIN")
     )
 

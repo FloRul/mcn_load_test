@@ -90,7 +90,7 @@ class Metric:
         return self.name, self.get_average(), self.scores, self.failed_responses
 
 
-class WebSocketLoadTester:
+class WebSocketTester:
 
     def __init__(
         self,
@@ -134,7 +134,7 @@ class WebSocketLoadTester:
             print(f"Error occurred for prompt: {prompt}. Error: {str(e)}")
             return prompt, {"error": f"Error: {str(e)}"}, 0
 
-    async def run_load_test(
+    async def run(
         self,
         prompts: List[Dict],
         connections: int = 1,
@@ -150,7 +150,7 @@ class WebSocketLoadTester:
             total_messages = connections * queue_size
 
         print(
-            f"Starting load test with {len(prompts)} prompts across {connections} connections "
+            f"Starting tests with {len(prompts)} prompts across {connections} connections "
             f"with a {'spread' if queue_size == -1 else f'queue size of {queue_size}'} "
             f"and a think time of {think_time} seconds"
         )
@@ -174,7 +174,7 @@ class WebSocketLoadTester:
             results = await asyncio.gather(*tasks, return_exceptions=True)
 
         print(
-            f"Completed load test with {len(prompts)} prompts across {connections} connections "
+            f"Completed test with {len(prompts)} prompts across {connections} connections "
             f"with a {'spread' if queue_size == -1 else f'queue size of {queue_size}'} "
             f"and a think time of {think_time} seconds"
         )

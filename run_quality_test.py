@@ -12,7 +12,7 @@ import datetime
 from typing import List, Tuple, Dict, Any
 import zipfile
 from analytics import Analytics
-from core import Metric, WebSocketLoadTester
+from core import Metric, WebSocketTester
 import traceback
 import logging
 import glob
@@ -263,15 +263,13 @@ async def main():
         args = parse_arguments()
         prompts = read_prompts("./datasets", max_samples=args.max_samples)
 
-        load_tester = WebSocketLoadTester(
-            args.websocket_url, args.origin, get_metrics()
-        )
+        tester = WebSocketTester(args.websocket_url, args.origin, get_metrics())
 
         print(
-            f"Starting load test with {len(prompts)} prompts and up to {args.connections} concurrent connections"
+            f"Starting quality test with {len(prompts)} prompts and up to {args.connections} concurrent connections"
         )
         start_time = time.time()
-        results = await load_tester.run_load_test(
+        results = await tester.run(
             prompts=prompts,
             connections=args.connections,
             queue_size=-1,
@@ -282,14 +280,14 @@ async def main():
         total_time = end_time - start_time
         stats = calculate_statistics(results)
 
-        script_name = "load_test"
+        script_name = "quality_test"
         suffix = datetime.datetime.now().strftime("%Y-%m-%d_%H-%M-%S")
         output_filename, output_summary = generate_output_filenames(
             args.output_folder, script_name, suffix
         )
 
         write_results(output_filename, results)
-        summary = write_summary(output_summary, stats, total_time, load_tester.metrics)
+        summary = write_summary(output_summary, stats, total_time, tester.metrics)
         analytics = Analytics(args.output_folder, args.output_folder, suffix=suffix)
         analytics.plot_failed_responses_summary(summary)
         analytics.plot_intent_distribution(stats)
@@ -313,7 +311,7 @@ async def main():
 
 if __name__ == "__main__":
     logging.basicConfig(
-        filename="load_test.log",
+        filename="quality_test.log",
         level=logging.ERROR,
         format="%(asctime)s - %(levelname)s - %(message)s",
     )

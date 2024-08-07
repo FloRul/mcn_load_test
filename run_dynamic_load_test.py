@@ -9,7 +9,7 @@ from typing import List, Dict, Any
 from matplotlib import pyplot as plt
 from websockets.exceptions import WebSocketException
 
-from core import WebSocketLoadTester, Metric
+from core import WebSocketTester, Metric
 import datetime
 
 
@@ -153,13 +153,13 @@ def plot_results(res_dict: Dict[str, Any], output_file: str):
 async def run_dynamic_load_test(
     args: argparse.Namespace, cached_prompts: List[Dict]
 ) -> Dict[str, Any]:
-    load_tester = WebSocketLoadTester(args.ws, args.origin, get_metrics())
+    load_tester = WebSocketTester(args.ws, args.origin, get_metrics())
     results = {}
     connection_count = args.step_size
 
     while connection_count <= args.max_connections:
 
-        all_results = await load_tester.run_load_test(
+        all_results = await load_tester.run(
             prompts=cached_prompts,
             connections=connection_count,
             queue_size=args.queue_size,
